@@ -1,0 +1,15 @@
+title = "mrdpd"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Docs and public placeholders"
+paths = [
+  '''docs/req\.txt$''',
+  '''\.env\.example$''',
+]
+regexes = [
+  '''changeme''',
+  '''example\.com''',
+]

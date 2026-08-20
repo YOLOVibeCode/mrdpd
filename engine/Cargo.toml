@@ -1,0 +1,5 @@
+[workspace]
+resolver = "2"
+members = ["stub"]
+
+# Stream S1 owns engine/stub. This workspace must parse before S1 implements ABI tests.
