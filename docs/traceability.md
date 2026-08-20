@@ -19,7 +19,7 @@ Legend for **Boundary**: B1 wire, B2 ABI, B3 FrameSource, B4 InputSink, B5 clipb
 | T2-SEC-01 | B1 | spike R5 | TBD | TBD | M1 spike | untested |
 | T2-SEC-02 | B1 | planned | M10 | — | M10 | untested |
 | T2-SEC-03 | APP | backlog optional | — | — | after M6 | untested |
-| T1-GFX-01 | B2/B3 | `engine/abi-tests/contract.c` (B2 `push_frame` / poison-after-return); FrameSource planned S2 | M1 solid BMP | M2 C-IPAD | M0–M2 | untested |
+| T1-GFX-01 | B2/B3 | B2: `engine/abi-tests/contract.c` (`push_frame` / poison-after-return); B3: `Tests/FrameKitTests/FrameTests.swift`, `Tests/FrameKitTests/FrameSourceContract.swift` | M1 solid BMP | M2 C-IPAD | M0–M2 | untested |
 | T1-GFX-02 | B1 | M2 codec | golden | C-IPAD M2 | M2 | untested |
 | T1-GFX-03 | B1 | M2/M5 | live | C-IPAD M5 | M5 | untested |
 | T1-GFX-04 | B3 | M4 dirty-rect | M5 | — | M5 | untested |
@@ -32,7 +32,7 @@ Legend for **Boundary**: B1 wire, B2 ABI, B3 FrameSource, B4 InputSink, B5 clipb
 | T2-MON-02 | B1 | M9 layout change | E2E rearrange | C-DESK | M9 | untested |
 | T2-MON-03 | B3 | M9 compositing | goldens | — | M9 | untested |
 | T2-MON-04 | APP | M9 flag + fallback doc | local | — | M9 | untested |
-| T1-IN-01 | B2/B4 | `engine/abi-tests/contract.c` (B2 `mrdpd_stub_script_mouse`); M3 FastPath | M3 sequence | — | M0/M3 | untested |
+| T1-IN-01 | B2/B4 | B2: `engine/abi-tests/contract.c` (`mrdpd_stub_script_mouse`); B4: `Tests/InputKitTests/InputEventTests.swift`, `Tests/InputKitTests/InputSinkContractTests.swift`; M3 FastPath | M3 sequence | — | M0/M3 | untested |
 | T1-IN-02 | DATA | M3 keymap tables | — | — | M3 | untested |
 | T1-IN-03 | B4 | M3/M6 coords | M6 | C-IPAD | M6 | untested |
 | T1-IN-04 | B4 | M6 CGEvent contract | loopback | C-IPAD M6 | M6 | untested |
