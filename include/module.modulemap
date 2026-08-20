@@ -1,0 +1,5 @@
+module CEngine {
+    header "mrdpd_engine.h"
+    header "mrdpd_engine_test.h"
+    export *
+}

@@ -2,7 +2,7 @@
 
 Apache-licensed **RDP server for macOS**. The goal is a real Remote Desktop endpoint on the Mac so [Windows App](https://apps.apple.com/app/windows-app/id1295203466) on an iPad (and desktop clients) can drive the logged-in console session — including lid-closed / repair-window use.
 
-This repository is **pre-alpha**. The tree is currently the specification, agent workstreams, and an empty Swift/Rust skeleton. There is not yet a daemon you can run.
+This repository is **pre-alpha**. M0b (StubEngine + FrameKit + InputKit + EngineKit contracts) is in tree. There is not yet a daemon you can run.
 
 ## License
 
@@ -21,8 +21,8 @@ Start at [docs/README.md](docs/README.md). Session rules: [AGENTS.md](AGENTS.md)
 
 ## Status
 
-- **M0a** (this documentation pack): in tree
-- **M0b** (StubEngine + Swift contracts): not started
+- **M0a** (documentation pack): done
+- **M0b** (StubEngine + FrameKit + InputKit + EngineKit): contract tests green
 
 ## Security / secrets
 

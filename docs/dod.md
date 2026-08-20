@@ -16,9 +16,9 @@ A milestone is not done when the demo looks good. It is done when this list is t
 
 ## M0 extra
 
-- [ ] All files listed in [tasks/m0.md](tasks/m0.md) exist
-- [ ] `just test` runs Swift contract tests + StubEngine ABI tests with **zero** IronRDP
-- [ ] Smoke: EngineKit + StubEngine + SyntheticFrameSource + RecordingInputSink
+- [x] All files listed in [tasks/m0.md](tasks/m0.md) exist
+- [x] `just test` runs Swift contract tests + StubEngine ABI tests with **zero** IronRDP
+- [x] Smoke: EngineKit + StubEngine + SyntheticFrameSource + RecordingInputSink
 
 ## M1 extra
 
