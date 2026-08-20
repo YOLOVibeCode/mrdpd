@@ -32,7 +32,7 @@ Legend for **Boundary**: B1 wire, B2 ABI, B3 FrameSource, B4 InputSink, B5 clipb
 | T2-MON-02 | B1 | M9 layout change | E2E rearrange | C-DESK | M9 | untested |
 | T2-MON-03 | B3 | M9 compositing | goldens | — | M9 | untested |
 | T2-MON-04 | APP | M9 flag + fallback doc | local | — | M9 | untested |
-| T1-IN-01 | B2/B4 | M0 scripted callback; M3 FastPath | M3 sequence | — | M0/M3 | untested |
+| T1-IN-01 | B2/B4 | Tests/InputKitTests/InputEventTests.swift; Tests/InputKitTests/InputSinkContractTests.swift (B4). B2 scripted callback pending S1/S4; M3 FastPath | M3 sequence | — | M0/M3 | untested |
 | T1-IN-02 | DATA | M3 keymap tables | — | — | M3 | untested |
 | T1-IN-03 | B4 | M3/M6 coords | M6 | C-IPAD | M6 | untested |
 | T1-IN-04 | B4 | M6 CGEvent contract | loopback | C-IPAD M6 | M6 | untested |
