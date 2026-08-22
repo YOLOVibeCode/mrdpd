@@ -4,7 +4,7 @@ Branch: `s3-inputkit`
 
 ## Goal
 
-Pure Swift `InputEvent` and ISP protocol `InputSink` with `RecordingInputSink`. No CGEvent. No engine.
+`InputEvent`, ISP `InputSink` (`handle` only), `RecordingInputSink`, keymap, M6 `CGEventInputSink`. No engine.
 
 ## Owns
 
@@ -16,14 +16,14 @@ Pure Swift `InputEvent` and ISP protocol `InputSink` with `RecordingInputSink`. 
 
 - `engine/**`, `include/**`
 - `Sources/FrameKit/**`, `Sources/EngineKit/**`
-- Keymap tables beyond what T1-IN-01 needs (full US map is M3 / later stream S6)
 
 ## TDD order
 
 1. `InputEvent` key/mouse equality (no protocol yet)
 2. Protocol `InputSink` with `handle(_: InputEvent)` only
 3. `RecordingInputSink` passes `testInputSinkContract(_:)`
-4. Do not add clipboard, gestures, or unicode IME
+4. M3: pure-data US keymap in `Sources/InputKit/Keymap/` (T1-IN-02)
+5. M6: `DisplayMap` + `InjectionPlan` (TCC-free); `CGEventInputSink` under `just test-local`
 
 ## Done when
 
@@ -31,4 +31,5 @@ Pure Swift `InputEvent` and ISP protocol `InputSink` with `RecordingInputSink`. 
 
 ## Read first
 
-`docs/modules.md`, `docs/spec.md` T1-IN-01, `docs/method.md`, `AGENTS.md`
+`docs/modules.md`, `docs/spec.md` T1-IN-01 / T1-IN-02, `docs/method.md`, `AGENTS.md`
+

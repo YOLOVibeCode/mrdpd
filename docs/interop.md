@@ -15,9 +15,35 @@ Automated tests prove contracts. These checklists prove Windows App will actuall
 
 Until M12 distribution exists:
 
-- TLS with generated cert; NLA username/password from a local test config (not the macOS login password)
-- Bind `127.0.0.1` plus optional Tailscale IP; **never** advertise 3389 on a public interface in development
+- TLS with generated cert; NLA username `mrdpd` / password `changeme` (lab only, gitleaks-allowlisted; not the macOS login password)
+- Bind `127.0.0.1` plus optional Tailscale IP; **never** advertise 0.0.0.0. `mrdpd-pattern` and `mrdpd-serve` exit 4 on unspecified bind (T1-SEC-04)
 - Tunnel if needed: `ssh -N -L 3390:127.0.0.1:3389 …` as in the original notes
+
+### M2 lab server (1080p quadrants)
+
+```bash
+just serve-pattern
+# iPad / other host: just serve-pattern host=<tailscale-ip>
+```
+
+Connect: `127.0.0.1:3390`, NLA `mrdpd` / `changeme`, expect four quadrants (red / green / blue / white). FreeRDP example:
+
+```bash
+xfreerdp /v:127.0.0.1:3390 /u:mrdpd /p:changeme /cert:ignore /rfx /size:1920x1080
+# macOS Homebrew (no XQuartz): just test-freerdp
+#   sdl-freerdp + SDL_VIDEODRIVER=dummy; asserts GDI PIXEL_FORMAT_BGRA32
+```
+
+### M5 lab server (live desktop)
+
+Needs Screen Recording TCC (`docs/tcc.md`).
+
+```bash
+just serve
+# iPad / other host: just serve host=<tailscale-ip>
+```
+
+Same NLA. Expect the Mac console (cursor composited). Keyboard and mouse inject via Accessibility TCC (`CGEventInputSink`).
 
 ## Per-milestone manual gates
 

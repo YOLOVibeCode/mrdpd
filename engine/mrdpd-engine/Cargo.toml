@@ -1,0 +1,42 @@
+[package]
+name = "mrdpd-engine"
+version = "0.0.0"
+edition = "2021"
+license = "Apache-2.0"
+publish = false
+
+[lib]
+name = "mrdpd_engine"
+crate-type = ["cdylib", "rlib"]
+
+[[bin]]
+name = "mrdpd-pattern"
+path = "src/bin/mrdpd-pattern.rs"
+
+[features]
+default = []
+# Exports mrdpd_stub_copy_last_frame so contract.c can assert poison-after-return.
+# Production dylibs must be built without this feature.
+test-hooks = []
+
+[dependencies]
+anyhow = "1"
+async-trait = "0.1"
+bytes = "1"
+# Default features advertise Qoi/QoiZ (codec IDs 10/11). ironrdp-session 0.17
+# does not decode QoiZ, so a headless screenshot stays black. helper + rayon =
+# TLS helper and parallel RemoteFX; no qoi/qoiz.
+ironrdp-server = { version = "0.13", default-features = false, features = ["helper", "rayon"] }
+rcgen = "0.14"
+tempfile = "3"
+tokio = { version = "1", features = ["rt-multi-thread", "net", "time", "macros", "sync"] }
+
+[dev-dependencies]
+anyhow = "1"
+ironrdp = { version = "0.17", features = ["connector", "session", "graphics"] }
+ironrdp-blocking = "0.10"
+sspi = { version = "0.21", features = ["network_client"] }
+tokio-rustls = "0.26"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+x509-cert = { version = "0.3", default-features = false, features = ["std"] }

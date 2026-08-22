@@ -121,7 +121,7 @@ StubEngine is not a toy. It must:
 - Export the same symbols as the real engine.
 - Bind a TCP port (can be a dummy accept loop) so bind-failure tests are real.
 - Accept `push_frame` and store a copy **it allocates**, never the caller pointer.
-- After start, fire exactly the scripted callbacks tests request (for M0: one mouse-move when the test calls a stub-only `mrdpd_stub_script_mouse` **test symbol**, not part of the production ABI). Production engine must not export stub-only symbols.
+- After start, fire exactly the scripted callbacks tests request (for M0: one mouse-move when the test calls a stub-only `mrdpd_stub_script_mouse` **test symbol**, not part of the production ABI; M3 adds `mrdpd_stub_script_key`). Production engine must not export stub-only symbols.
 - Alternative for production-shaped tests: the headless client in M1 drives real input; M0 uses a test-only second header `mrdpd_engine_test.h` implemented only by StubEngine.
 
 Preferred: `mrdpd_engine_test.h` is StubEngine-only. ABI contract tests that apply to **both** dylibs never call test-only symbols. Scripted input for M0 Swift wiring uses the test header against StubEngine only. M1 input tests use a real client.

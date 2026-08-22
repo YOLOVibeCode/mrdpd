@@ -42,6 +42,7 @@ public final class Engine: @unchecked Sendable {
     private let stopFn: @convention(c) () -> Int32
     private let pushFn: @convention(c) (UnsafePointer<MrdpdFrame>?) -> Int32
     private let scriptMouseFn: (@convention(c) (UnsafePointer<MrdpdMouseEvent>?) -> Int32)?
+    private let scriptKeyFn: (@convention(c) (UnsafePointer<MrdpdKeyEvent>?) -> Int32)?
     private let copyLastFrameFn:
         (@convention(c) (UnsafeMutablePointer<UInt8>?, UInt32, UnsafeMutablePointer<UInt32>?) -> Int32)?
 
@@ -89,6 +90,15 @@ public final class Engine: @unchecked Sendable {
             )
         } else {
             scriptMouseFn = nil
+        }
+        dlerror()
+        if let raw = dlsym(handle, "mrdpd_stub_script_key") {
+            scriptKeyFn = unsafeBitCast(
+                raw,
+                to: (@convention(c) (UnsafePointer<MrdpdKeyEvent>?) -> Int32).self
+            )
+        } else {
+            scriptKeyFn = nil
         }
         dlerror()
         if let raw = dlsym(handle, "mrdpd_stub_copy_last_frame") {
@@ -172,6 +182,17 @@ public final class Engine: @unchecked Sendable {
         }
         var event = MrdpdMouseEvent(x: x, y: y, buttons: buttons, wheel: wheel)
         try throwIfNeeded(withUnsafePointer(to: &event, scriptMouseFn))
+    }
+
+    public func scriptKeyForTests(scancode: UInt16, isExtended: Bool, isPressed: Bool) throws {
+        guard let scriptKeyFn else {
+            throw EngineError.symbolMissing("mrdpd_stub_script_key")
+        }
+        var event = MrdpdKeyEvent()
+        event.scancode = scancode
+        event.extended = isExtended ? 1 : 0
+        event.pressed = isPressed ? 1 : 0
+        try throwIfNeeded(withUnsafePointer(to: &event, scriptKeyFn))
     }
 
     public func copyLastFramePixelsForTests(capacity: Int = 4096) throws -> [UInt8] {

@@ -18,12 +18,17 @@ Nothing here is a “layer.” Each row is a testable element. Do not implement 
 
 | Module | Depends on | Spec IDs |
 | --- | --- | --- |
-| mrdpd-engine (IronRDP) | ABI v1 | T1-SEC-01/02, T1-GFX-02/03 |
-| Headless harness | engine | T1-GFX-01 |
-| Keymap tables | InputEvent | T1-IN-02 |
-| SCKFrameSource | FrameSource | T1-GFX-04/05 |
-| Dirty-rect / Retina mapper | Frame | T1-IN-03, T1-GFX-04 |
-| CGEventInputSink | InputSink, keymap | T1-IN-04 |
+| mrdpd-engine (IronRDP) — M1 | ABI v1 | T1-SEC-01/02/03, T1-GFX-01 |
+| Headless harness — M1/M2 | engine | T1-GFX-01, T1-GFX-03 |
+| `mrdpd-pattern` lab bin — M2 | engine + 1080p fixture | T1-GFX-01, T1-SEC-04 |
+| `UsKeymap` — M3 | InputEvent | T1-IN-02 |
+| DirtyRects + CaptureFrame | Frame | T1-GFX-01, T1-GFX-04 |
+| SCKFrameSource | FrameSource | T1-GFX-01, T1-GFX-04 dirty list |
+| FramePacer | — | T1-GFX-04 cap 60 |
+| SCKSettings + cursor | SCKFrameSource | T1-GFX-05 |
+| FramePump + `mrdpd-serve` | FrameSource, EngineKit, SCK | T1-GFX-01 live, T1-SEC-04 |
+| DisplayMap + InjectionPlan | InputEvent | T1-IN-03, T1-IN-04 |
+| CGEventInputSink | InputSink, keymap, DisplayMap | T1-IN-04 |
 | App session (one client) | EngineKit | T1-SEC-03 |
 
 ## Extract later (not types today)

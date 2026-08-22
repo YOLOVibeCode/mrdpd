@@ -8,6 +8,7 @@ let package = Package(
         .library(name: "FrameKit", targets: ["FrameKit"]),
         .library(name: "InputKit", targets: ["InputKit"]),
         .library(name: "EngineKit", targets: ["EngineKit"]),
+        .executable(name: "mrdpd-serve", targets: ["mrdpd-serve"]),
     ],
     targets: [
         .target(
@@ -18,6 +19,10 @@ let package = Package(
         .target(name: "FrameKit"),
         .target(name: "InputKit"),
         .target(name: "EngineKit", dependencies: ["CEngine", "FrameKit", "InputKit"]),
+        .executableTarget(
+            name: "mrdpd-serve",
+            dependencies: ["EngineKit", "FrameKit", "InputKit"]
+        ),
         .testTarget(name: "FrameKitTests", dependencies: ["FrameKit"]),
         .testTarget(name: "InputKitTests", dependencies: ["InputKit"]),
         .testTarget(name: "EngineKitTests", dependencies: ["EngineKit", "FrameKit", "InputKit"]),

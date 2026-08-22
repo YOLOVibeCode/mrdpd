@@ -2,7 +2,7 @@
  *
  * T1-GFX-01  push_frame 2×2 BGRA + poison-after-return
  * T1-SEC-04  dummy listen / MRDPD_ERR_BIND
- * T1-IN-01   scripted on_mouse via mrdpd_engine_test.h (StubEngine only)
+ * T1-IN-01   scripted on_mouse / on_key via mrdpd_engine_test.h (StubEngine only)
  *
  * Usage: contract <path-to-dylib>
  * Stub-only symbols are required unless --allow-missing-stub-hooks is passed.
@@ -45,6 +45,7 @@ typedef struct Api {
     int32_t (*stop)(void);
     int32_t (*push_frame)(const MrdpdFrame *);
     int32_t (*script_mouse)(const MrdpdMouseEvent *);
+    int32_t (*script_key)(const MrdpdKeyEvent *);
     int32_t (*copy_last_frame)(uint8_t *, uint32_t, uint32_t *);
 } Api;
 
@@ -297,7 +298,9 @@ static void test_push_poison(void)
 }
 
 static volatile int g_mouse_count;
+static volatile int g_key_count;
 static MrdpdMouseEvent g_last_mouse;
+static MrdpdKeyEvent g_last_key;
 static void *g_last_ud;
 
 static void on_mouse(void *userdata, MrdpdMouseEvent event)
@@ -305,6 +308,13 @@ static void on_mouse(void *userdata, MrdpdMouseEvent event)
     g_last_ud = userdata;
     g_last_mouse = event;
     g_mouse_count++;
+}
+
+static void on_key(void *userdata, MrdpdKeyEvent event)
+{
+    g_last_ud = userdata;
+    g_last_key = event;
+    g_key_count++;
 }
 
 /* 6. T1-IN-01 — StubEngine scripted mouse via test header */
@@ -344,6 +354,43 @@ static void test_script_mouse(void)
     CHECK(g_mouse_count == 1, "no callback after stop returns");
 }
 
+/* 6b. T1-IN-01 — StubEngine scripted key via test header */
+static void test_script_key(void)
+{
+    if (g_api.script_key == NULL) {
+        CHECK(!g_require_stub_hooks, "mrdpd_stub_script_key required on StubEngine");
+        return;
+    }
+    stop_quiet();
+    g_key_count = 0;
+    memset(&g_last_key, 0, sizeof(g_last_key));
+    g_last_ud = NULL;
+
+    int marker = 43;
+    MrdpdEngineConfig c = localhost_config(0);
+    MrdpdCallbacks cb = empty_callbacks();
+    cb.userdata = &marker;
+    cb.on_key = on_key;
+    CHECK(g_api.start(&c, &cb) == MRDPD_OK, "start for scripted key");
+
+    MrdpdKeyEvent ev;
+    memset(&ev, 0, sizeof(ev));
+    ev.scancode = 0x1E;
+    ev.extended = 0;
+    ev.pressed = 1;
+    CHECK(g_api.script_key(&ev) == MRDPD_OK, "script key down");
+    ev.pressed = 0;
+    CHECK(g_api.script_key(&ev) == MRDPD_OK, "script key up");
+    CHECK(g_key_count == 2, "on_key fired twice");
+    CHECK(g_last_ud == &marker, "userdata forwarded");
+    CHECK(g_last_key.scancode == 0x1E && g_last_key.pressed == 0, "last is key up");
+
+    CHECK(g_api.stop() == MRDPD_OK, "stop after key");
+    CHECK(g_api.script_key(&ev) == MRDPD_ERR_NOT_STARTED, "script key after stop");
+    usleep(50 * 1000);
+    CHECK(g_key_count == 2, "no key callback after stop returns");
+}
+
 static int load_api(void *lib)
 {
     g_api.abi_version = (uint32_t (*)(void))must_dlsym(lib, "mrdpd_engine_abi_version");
@@ -353,6 +400,7 @@ static int load_api(void *lib)
     g_api.push_frame = (int32_t (*)(const MrdpdFrame *))must_dlsym(lib, "mrdpd_engine_push_frame");
     g_api.script_mouse =
         (int32_t (*)(const MrdpdMouseEvent *))dlsym(lib, "mrdpd_stub_script_mouse");
+    g_api.script_key = (int32_t (*)(const MrdpdKeyEvent *))dlsym(lib, "mrdpd_stub_script_key");
     g_api.copy_last_frame =
         (int32_t (*)(uint8_t *, uint32_t, uint32_t *))dlsym(lib, "mrdpd_stub_copy_last_frame");
     return g_api.abi_version && g_api.start && g_api.stop && g_api.push_frame;
@@ -402,6 +450,7 @@ int main(int argc, char **argv)
     test_config_strings_copied();
     test_push_poison();
     test_script_mouse();
+    test_script_key();
 
     stop_quiet();
     dlclose(lib);

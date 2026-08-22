@@ -44,7 +44,7 @@ Each ID: protocol, macOS approach, engine status, tier, milestone.
 | T1-SEC-06 | No plaintext RDP in release builds | build flag | n/a | T1 | M12 |
 | T1-SEC-07 | Secrets in Keychain; config holds references | Keychain | n/a | T1 | M12 |
 | T1-SEC-08 | Audit log: who / when / from-where / auth outcome | local | callbacks | T1 | M12 |
-| T2-SEC-01 | Auto-reconnect cookies without re-auth loops | MS-RDPBCGR | **spike R5** | T2 | M1 spike; feature TBD |
+| T2-SEC-01 | Auto-reconnect cookies without re-auth loops | MS-RDPBCGR | **spike R5**: implement after M6 on IronRDP with `with_auto_reconnect_cookie` (not crates.io 0.13.0) | T2 | after M6 |
 | T2-SEC-02 | Network autodetect / RTT feeds encoder | autodetect, echo | built-in TBD | T2 | M10 |
 | T2-SEC-03 | Optional read-only second viewer | session | TBD | T2 | optional after M6 |
 
@@ -52,9 +52,9 @@ Each ID: protocol, macOS approach, engine status, tier, milestone.
 
 | ID | Requirement | Protocol / API | Engine | Tier | Milestone |
 | --- | --- | --- | --- | --- | --- |
-| T1-GFX-01 | Push BGRA frames with stride + dirty rects into the engine | ABI v1 | consume frames | T1 | M0–M2 |
-| T1-GFX-02 | RDP 6.0 bitmap + interleaved RLE fallback | MS-RDPBCGR | built-in | T1 | M2 |
-| T1-GFX-03 | RemoteFX (incl. progressive) default codec pre-EGFX | RemoteFX | built-in | T1 | M2 / M5 |
+| T1-GFX-01 | Push BGRA frames with stride + dirty rects into the engine | ABI v1 | consume frames | T1 | M0–M5 |
+| T1-GFX-02 | RDP 6.0 bitmap + interleaved RLE fallback | MS-RDPBCGR | built-in; **not used** while the client advertises RemoteFX (M2) | T1 | M2 |
+| T1-GFX-03 | RemoteFX (incl. progressive) default codec pre-EGFX | RemoteFX | built-in; M2 1080p E2E (QoiZ compile-out) | T1 | M2 / M5 |
 | T1-GFX-04 | Damage-driven encode, frame pacing (cap 60, adaptive) | SCK dirty + pacer | n/a | T1 | M5 |
 | T1-GFX-05 | Cursor composited into frames | SCK cursor | n/a | T1 | M5 |
 | T2-GFX-01 | Color pointer PDUs; client-side cursor | pointer PDUs | TBD | T2 | after M6 |
@@ -68,7 +68,7 @@ RDP virtual desktop: primary at (0,0); others relative; negative origins allowed
 | ID | Requirement | Protocol / API | Engine | Tier | Milestone |
 | --- | --- | --- | --- | --- | --- |
 | T1-MON-01 | Single-monitor dynamic resize (client rotation / RDPEDISP one monitor) | MS-RDPEDISP | implemented | T1 | M8 |
-| T2-MON-01 | Static multimon at connect (GCC monitor list) | GCC | **spike R1** | T2 | M9 |
+| T2-MON-01 | Static multimon at connect (GCC monitor list) | GCC | **spike R1**: upstream acceptor / patch (not OUT) | T2 | M9 |
 | T2-MON-02 | Dynamic add/remove/rearrange | MS-RDPEDISP | implemented | T2 | M9 |
 | T2-MON-03 | One SCStream per SCDisplay; dirty rects translated into virtual-desktop space; Retina consistent | SCK | n/a | T2 | M9 |
 | T2-MON-04 | Virtual displays when client wants more monitors than exist / lid closed (`CGVirtualDisplay`, flag); HDMI dummy plug documented fallback | private API **R3** | n/a | T2 | M9 |
@@ -85,7 +85,7 @@ iPad Windows App is single-monitor (informative). iPad still gets T1-MON-01 exac
 | T1-IN-04 | CGEvent posting for key + mouse (Accessibility TCC) | CGEvent | n/a | T1 | M6 |
 | T2-IN-01 | Unicode keyboard (TS_UNICODE) for IME | MS-RDPBCGR | TBD | T2 | after M6 |
 | T2-IN-02 | Horizontal wheel + XButtons | FastPath | TBD | T2 | after M6 |
-| T2-IN-03 | MS-RDPEI touch → gestures (two-finger scroll min; pinch best-effort) | MS-RDPEI | **spike R2** | T2 | after spike |
+| T2-IN-03 | MS-RDPEI touch → gestures (two-finger scroll min; pinch best-effort) | MS-RDPEI | **spike R2**: upstream attach `RdpeiServer`; T1 fallback = wheel | T2 | after M6 |
 | OUT-IN-01 | Pen frames | MS-RDPEI | — | OUT | — |
 
 ### 4.5 Clipboard (MS-RDPECLIP)
@@ -151,4 +151,4 @@ iPad Windows App is single-monitor (informative). iPad still gets T1-MON-01 exac
 
 ## 8. Open spikes
 
-See [risks.md](risks.md). R1, R2, R5 are M1 DoD. R3 accepted as flag+dummy-plug. R4 accepted as RemoteFX fallback + engine swap.
+See [risks.md](risks.md). R1, R2, R5 spikes are written (M1 DoD). R3 accepted as flag+dummy-plug. R4 accepted as RemoteFX fallback + engine swap.

@@ -7,3 +7,4 @@ publish = false
 
 [dev-dependencies]
 mrdpd-stub-engine = { path = "../stub" }
+mrdpd-engine = { path = "../mrdpd-engine", features = ["test-hooks"] }

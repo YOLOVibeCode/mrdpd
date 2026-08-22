@@ -19,7 +19,7 @@ Rules for every human and every agent working in this repository. Read this file
 
 - Implement T1 + T2 only. T3 and `OUT-*` are not work.
 - **M6 is the survival gate** (live screen + injected input from iPad). Do not start T2 feature work (multimon, EGFX, audio, file clipboard) until M6 is interop-green, unless a T2 item is required to unblock a T1 bug.
-- Rolling-wave tasks: only `docs/tasks/m0.md` and `docs/tasks/m1.md` are fully decomposed. Do not write novel task lists for M7+ until the previous gate is green.
+- Rolling-wave tasks: `docs/tasks/m1.md`–`m6.md` (`m2`/`m5`/`m6` iPad deferred). Do not write novel task lists for M7+ until the previous gate is green.
 
 ## Boundaries
 

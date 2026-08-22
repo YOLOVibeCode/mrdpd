@@ -31,7 +31,7 @@ SCK   CGEvent
 | --- | --- | --- | --- | --- |
 | B1 | Wire protocol | MS-RDPBCGR + channels in spec | Headless IronRDP client | Windows App, FreeRDP |
 | B2 | Engine FFI | [abi.md](abi.md) + `include/mrdpd_engine.h` | StubEngine dylib | `mrdpd-engine` (IronRDP) |
-| B3 | FrameSource | Swift protocol in CaptureKit | `SyntheticFrameSource` | `SCKFrameSource` (M4) |
+| B3 | FrameSource | Swift protocol in FrameKit | `SyntheticFrameSource` | `SCKFrameSource` (M4) |
 | B4 | InputSink | Swift protocol in InputKit | `RecordingInputSink` | `CGEventInputSink` (M6) |
 | B5 | ClipboardBridge | extracted M7 | `InMemoryClipboard` | `PasteboardClipboard` |
 | B6 | AudioSource | extracted M11 | `ToneAudioSource` | `SCKAudioSource` |
@@ -54,10 +54,11 @@ Frame, InputEvent, EngineError     value types (M0)
                 └─ keymap tables (M3, pure data)
                         │
                         ├─ SCKFrameSource (M4)
+                        ├─ FramePacer + FramePump (M5)
                         ├─ ironrdp-backed engine (M1)
                         └─ CGEventInputSink (M6)
                                 │
-                                └─ app wiring (M5 view, M6 control)
+                                └─ app wiring (`mrdpd-serve` M5 view, M6 control)
 ```
 
 Clipboard, layout, AVC, and audio attach as new segregated protocols, never as methods piled onto `Engine` or `FrameSource`.
@@ -71,7 +72,7 @@ Clipboard, layout, AVC, and audio attach as new segregated protocols, never as m
 
 ## Encoding path
 
-- T1: Swift pushes BGRA frames (dirty rects) through `mrdpd_engine_push_frame`. The engine encodes RemoteFX / RLE.
+- T1: Swift pushes BGRA frames (dirty rects) through `mrdpd_engine_push_frame`. The engine encodes RemoteFX (Qoi/QoiZ compile-out: IronRDP session does not decode codec 11). M2 E2E is a 1080p quadrant pattern, not H.264.
 - T2: Swift encodes H.264 via VideoToolbox and pushes annex-B (or engine-agreed) access units through a **new** ABI function added in M10, `mrdpd_engine_push_avc_frame`. FrameSource does not grow an `encodeH264` method.
 
 ## Display topology

@@ -1,6 +1,6 @@
 # Milestones (implementation plan in-repo)
 
-Rolling-wave: only [tasks/m0.md](tasks/m0.md) and [tasks/m1.md](tasks/m1.md) are fully tasked. Later milestones are gates, not a Gantt chart.
+Rolling-wave: [tasks/m1.md](tasks/m1.md)–[tasks/m6.md](tasks/m6.md) are tasked (`m2`/`m5`/`m6` iPad deferred). Later milestones are gates, not a Gantt chart.
 
 Survival gate: **M6**. No T2 feature work until M6 is interop-green on iPad, unless it unblocks a T1 defect.
 

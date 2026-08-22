@@ -2,7 +2,7 @@
 
 Apache-licensed **RDP server for macOS**. The goal is a real Remote Desktop endpoint on the Mac so [Windows App](https://apps.apple.com/app/windows-app/id1295203466) on an iPad (and desktop clients) can drive the logged-in console session — including lid-closed / repair-window use.
 
-This repository is **pre-alpha**. M0b (StubEngine + FrameKit + InputKit + EngineKit contracts) is in tree. There is not yet a daemon you can run.
+This repository is **pre-alpha**. M6 injects keyboard/mouse (`just serve` needs Screen Recording **and** Accessibility). Lab: `just serve-pattern` or `just serve` on `127.0.0.1:3390`.
 
 ## License
 
@@ -10,7 +10,7 @@ This repository is **pre-alpha**. M0b (StubEngine + FrameKit + InputKit + Engine
 
 ## Docs
 
-Start at [docs/README.md](docs/README.md). Session rules: [AGENTS.md](AGENTS.md). Parallel agents: [docs/workstreams.md](docs/workstreams.md).
+Start at [docs/README.md](docs/README.md) (read [docs/checkpoint.md](docs/checkpoint.md) first). Session rules: [AGENTS.md](AGENTS.md). Parallel agents: [docs/workstreams.md](docs/workstreams.md).
 
 | Doc | What |
 | --- | --- |
@@ -23,6 +23,12 @@ Start at [docs/README.md](docs/README.md). Session rules: [AGENTS.md](AGENTS.md)
 
 - **M0a** (documentation pack): done
 - **M0b** (StubEngine + FrameKit + InputKit + EngineKit): contract tests green
+- **M1** (real `mrdpd-engine` + C-HEADLESS #FF00FF): `just test` green; spikes R1/R2/R5 written
+- **M2** (1080p quadrants): C-HEADLESS + FreeRDP `sdl-freerdp` GDI green; iPad still required for DoD
+- **M3** (input decode): keymap + FastPath → `RecordingInputSink`
+- **M4** (SCK capture): `just test-local` contract-green
+- **M5** (live view): `just serve` + 60 fps pacer + cursor composite; iPad live view still required for DoD
+- **M6** (inject): `CGEventInputSink` + Retina `DisplayMap`; iPad typing still required for the survival-gate DoD
 
 ## Security / secrets
 

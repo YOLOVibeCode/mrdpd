@@ -323,6 +323,27 @@ fn script_mouse_inner(event: *const MrdpdMouseEvent) -> i32 {
     MRDPD_OK
 }
 
+fn script_key_inner(event: *const MrdpdKeyEvent) -> i32 {
+    if event.is_null() {
+        return MRDPD_ERR_INVAL;
+    }
+    // SAFETY: non-NULL event borrowed for this call.
+    let event = unsafe { *event };
+    let (on_key, userdata) = {
+        let engine = lock_engine();
+        let Some(live) = engine.live.as_ref() else {
+            return MRDPD_ERR_NOT_STARTED;
+        };
+        (live.callbacks.on_key, live.callbacks.userdata)
+    };
+    CALLBACKS_IN_FLIGHT.fetch_add(1, Ordering::SeqCst);
+    if let Some(on_key) = on_key {
+        on_key(userdata, event);
+    }
+    CALLBACKS_IN_FLIGHT.fetch_sub(1, Ordering::SeqCst);
+    MRDPD_OK
+}
+
 fn copy_last_frame_inner(out: *mut u8, out_cap: u32, out_len: *mut u32) -> i32 {
     if out.is_null() || out_len.is_null() {
         return MRDPD_ERR_INVAL;
@@ -375,6 +396,11 @@ pub extern "C" fn mrdpd_engine_push_frame(frame: *const MrdpdFrame) -> i32 {
 #[no_mangle]
 pub extern "C" fn mrdpd_stub_script_mouse(event: *const MrdpdMouseEvent) -> i32 {
     ffi_guard(|| script_mouse_inner(event))
+}
+
+#[no_mangle]
+pub extern "C" fn mrdpd_stub_script_key(event: *const MrdpdKeyEvent) -> i32 {
+    ffi_guard(|| script_key_inner(event))
 }
 
 #[no_mangle]
