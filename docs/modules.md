@@ -37,7 +37,9 @@ Nothing here is a “layer.” Each row is a testable element. Do not implement 
 | --- | --- | --- |
 | M7 | `ClipboardBridge` | string round-trip T1-CLP-01 |
 | M8 | layout callback on ABI v1+ or v2 | T1-MON-01 |
+| after M8 | picker: `PickerState`, `PickerOverlay`, `PickerInputSink` (`InputSink` decorator), `OverlayFrameSource` (`FrameSource` decorator) | T2-MON-06 |
 | M9 | `MonitorLayout` value type + compositor | T2-MON-03 |
+| M9 | `MonitorMapping` + `DesktopMap` (replaces `DisplayMap` in `InjectionPlan`) | T2-MON-05 |
 | M10 | `AvcFrameSink` / `push_avc_frame` | T2-GFX-02 |
 | M11 | `AudioSource` | T2-AUD-01 |
 | M12 | config, Keychain, LaunchAgent | T1-OPS-* |

@@ -9,3 +9,4 @@ Numbered, immutable once accepted. New decision = new file. Supersede by adding 
 | [0003](0003-tdd-and-isp.md) | TDD + ISP; grow protocols from tests | accepted |
 | [0004](0004-single-console-session.md) | One logged-in user, one active client | accepted |
 | [0005](0005-private-virtual-display.md) | Flagged private virtual display; dummy plug fallback | accepted |
+| [0006](0006-mac-display-mapping.md) | Map Mac displays into the client's monitor layout | accepted |
