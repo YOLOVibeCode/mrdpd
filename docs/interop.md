@@ -58,6 +58,11 @@ Same NLA. Expect the Mac console (cursor composited). Keyboard and mouse inject 
 | M10 | WAN smoke if possible | A/B notes | optional |
 | M11 | hear tone / system audio | same | optional |
 | M12 | clean install path | — | — |
+| V0 | [tasks/v0.md](tasks/v0.md) checklist: two windows, size requested, Cmd mapping, hotkeys, EGFX caps | — | — |
+| V1 | full screen and 4K window each show a chosen Mac display, crisp, clicks exact | `/size:` and `/dynamic-resolution` | optional |
+| V2 | hotkey switch, HUD, overview tap | same | optional |
+| V3 | iPad screen + 4K show different displays at once | two clients | optional |
+| V4 | smooth 4K scrolling; local cursor; H.264 active | `/gfx:avc420` | optional |
 
 Deferral requires a sentence in the milestone notes (client missing, lab down). Silent skip fails DoD.
 

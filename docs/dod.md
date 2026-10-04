@@ -61,6 +61,15 @@ A milestone is not done when the demo looks good. It is done when this list is t
 - [x] iPad Windows App: live desktop visible; some typing (`docs/tasks/m6.md` C-IPAD log). Smoothness + full mouse/Cmd still open
 - [ ] Traceability rows for T1 graphics + T1 input are at least `interop-green` on iPad
 
+## Viewport track extra (V0–V5)
+
+- [ ] V0: [tasks/v0.md](tasks/v0.md) device checklist answered and logged; M6 input scored on iPad
+- [ ] V1: a non-first Mac display served at the client's requested size; click lands through letterbox bars (`just live-check`); iPad + 4K window interop log
+- [ ] V2: hotkey switch and overview pick pass in `just live-check`; hotkeys verified on Windows App iPadOS
+- [ ] V3: two concurrent viewports on different displays in `just live-check`; ABI v2 contract green on StubEngine **and** `mrdpd-engine`
+- [ ] V4: H.264 decoded by the headless client and by Windows App iPadOS; client-side cursor; T1-PERF-05 met on the owner's Mac
+- [ ] V5 (only if ADR 0008 accepted): `ViewportProtocol` contracts in `just test`; iPad screen + 4K as two windows of `mrdpd-ipad`
+
 ## M12 extra
 
 - [ ] Clean VM / clean user install

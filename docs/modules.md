@@ -36,10 +36,13 @@ Nothing here is a “layer.” Each row is a testable element. Do not implement 
 | When | Protocol | First test |
 | --- | --- | --- |
 | M7 | `ClipboardBridge` | string round-trip T1-CLP-01 |
-| M8 | layout callback on ABI v1+ or v2 | T1-MON-01 |
-| M9 | `MonitorLayout` value type + compositor | T2-MON-03 |
-| M10 | `AvcFrameSink` / `push_avc_frame` | T2-GFX-02 |
+| V1 | `DisplayRegistry`; connect-info callback (ABI bump); aspect-fit `DisplayMap` | T1-VP-01, T1-VP-02 |
+| V2 | `ViewportRouter` (B7), hotkey matcher, overlay compositor | T1-VP-03, T1-VP-04 |
+| V3 | ABI v2 connection handles; focus/cursor arbiter | T1-VP-05, T1-VP-06 |
+| V4 | Viewport encoder (B8, replaces the `AvcFrameSink` plan), `EncodeScheduler`, `CursorSource` | T1-GFX-06…08 |
+| V5 | `ViewportProtocol` package, native front end (if ADR 0008 accepted) | T2-NAT-01… |
+| after V4 | `MonitorLayout` for desktop GCC multimon | T2-MON-01…03 |
 | M11 | `AudioSource` | T2-AUD-01 |
 | M12 | config, Keychain, LaunchAgent | T1-OPS-* |
 
-Resize (M8) may be an additive ABI function. That is a version bump per [abi.md](abi.md), not a method secretly added to `push_frame`.
+Resize (now V1) and connection handles (V3) are additive ABI changes. Each is a version bump per [abi.md](abi.md), not a method secretly added to `push_frame`.
