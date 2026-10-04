@@ -18,7 +18,7 @@ Status values: `open` | `spiking` | `mitigated` | `accepted`.
 | R12 | Keymap long tail (dead keys, non-US) | Wrong characters | Pure-data tables, unit tests per layout; US complete at M3, others incremental | M3+ | open |
 | R13 | Private API + notarization of a dylib | Distribution pain | Sign both binaries; virtual display stays flag-off in release if it blocks notarization | M12 | open |
 | R14 | Scope creep into T3 device redirection | Project never reaches M6 | AGENTS.md forbids T3; M6 survival gate | ongoing | mitigated |
-| R15 | Client chrome covers a top-center picker tab (T2-MON-06): mstsc / Windows App on Windows show a connection bar there in full screen; Windows App on macOS reveals its menu bar at the top edge; the iPad app has its own toolbar | Picker hidden or unclickable on some clients | Spike before building the picker: a static tab on branch `spike-r15-tab`, tried on each client during the M6 iPad re-test. Fallbacks: offset down from the edge, a top corner, or a key chord | M6 re-test | spiking |
+| R15 | Client chrome covers a top-center picker tab (T2-MON-06): mstsc / Windows App on Windows show a connection bar there in full screen; Windows App on macOS reveals its menu bar at the top edge; the iPad app has its own toolbar | Picker hidden or unclickable on some clients | [Spike](spikes/2026-10-04-r15-tab-position.md) before building the picker: a static tab on branch `spike-r15-tab`, tried on each client during the M6 iPad re-test. Local run: the tab renders and the pointer reaches it; device checks pending. Fallbacks: offset down from the edge, a top corner, or a key chord | M6 re-test | spiking |
 
 ## Spike template (`docs/spikes/YYYY-MM-DD-rN-title.md`)
 

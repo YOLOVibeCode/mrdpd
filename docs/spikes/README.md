@@ -15,3 +15,4 @@ Drop findings here using the template in [risks.md](../risks.md).
 | Risk | File | Answer |
 | --- | --- | --- |
 | R1 | [2026-10-03-r1-host-display-picker.md](2026-10-03-r1-host-display-picker.md) | Choosing which Mac displays fill which client monitors is a server-side mapping; stock clients work. One client monitor: capture choice only (T1-MON-02). Two: blocked on R1 like T2-MON-01; 0.13.0 also caps RDPEDISP at one monitor, 0.14 lifts that. ADR 0006. |
+| R15 | [2026-10-04-r15-tab-position.md](2026-10-04-r15-tab-position.md) | Partial: a static top-center tab renders in the RDP stream and the pointer reaches it (headless). Device checks (iPad, Windows App macOS, FreeRDP, mstsc) pending on branch `spike-r15-tab`. |
