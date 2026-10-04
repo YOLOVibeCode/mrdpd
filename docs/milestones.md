@@ -34,7 +34,7 @@ Each V gate has an automated part (`just live-check` grows a test per ID) and a 
 | V2 | Navigate | T1-VP-03, T1-VP-04 | From the iPad: hotkey switch < 300 ms to first new frame; HUD; overview pick by tap |
 | V3 | Two screens at once | T1-VP-05, T1-VP-06, ABI v2 | Two concurrent viewports (two clients or two windows) show different displays and switch independently; cursor never fights |
 | V4 | Smooth at 4K | T1-GFX-06, T1-GFX-07, T1-GFX-08, T1-PERF-05 | Client-side cursor; H.264 on Windows App; two-viewport budget met on the owner's Mac |
-| V5 | Native iPad client | T2-NAT-01…06 | **Only if [ADR 0008](adr/0008-native-ipad-client.md) is accepted.** iPad screen and 4K as two windows of one app, picker strip, Mac-correct keys, precise scrolling |
+| V5 | Native iPad client | T2-NAT-01…06 | **Accepted and built first (v0.1, 2026-10-04, owner request)** — [ipad.md](ipad.md). Gate: iPad screen and 4K as two windows of the app on the owner's device, picker strip, Mac-correct keys, precise scrolling. Simulator + loopback green; device pending |
 
 ## Rhythm (every M)
 

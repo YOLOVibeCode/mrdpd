@@ -1,0 +1,75 @@
+# XcodeGen spec for the mrdpd iPad app (ADR 0008). Generate with `just ipad-project`.
+name: mrdpd-ipad
+options:
+  bundleIdPrefix: com.noctusoft
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+packages:
+  ViewportKit:
+    path: ../../Packages/ViewportKit
+targets:
+  mrdpd:
+    type: application
+    platform: iOS
+    sources:
+      - Sources
+    dependencies:
+      - package: ViewportKit
+        product: ViewportProtocol
+      - package: ViewportKit
+        product: ViewportTransport
+      - package: ViewportKit
+        product: ViewportClient
+    scheme:
+      testTargets:
+        - mrdpdUITests
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.noctusoft.mrdpd
+        PRODUCT_NAME: mrdpd
+        TARGETED_DEVICE_FAMILY: "2"
+        SWIFT_VERSION: "6.0"
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: N42FM5L5KD
+        ENABLE_PREVIEWS: NO
+    info:
+      path: Info.plist
+      properties:
+        CFBundleDisplayName: mrdpd
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: true
+        UIApplicationSupportsIndirectInputEvents: true
+        UIRequiresFullScreen: false
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        NSLocalNetworkUsageDescription: mrdpd connects to your Mac on your network to show its displays.
+        NSCameraUsageDescription: Scan the pairing code shown on your Mac.
+        ITSAppUsesNonExemptEncryption: false
+        CFBundleURLTypes:
+          - CFBundleURLName: com.noctusoft.mrdpd.pair
+            CFBundleURLSchemes: [mrdpd]
+  mrdpdUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - UITests
+    dependencies:
+      - target: mrdpd
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.noctusoft.mrdpd.uitests
+        TEST_TARGET_NAME: mrdpd
+        TARGETED_DEVICE_FAMILY: "2"
+        SWIFT_VERSION: "6.0"
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: N42FM5L5KD

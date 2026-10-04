@@ -11,5 +11,5 @@ Numbered, immutable once accepted. New decision = new file. Supersede by adding 
 | [0005](0005-private-virtual-display.md) | Flagged private virtual display; dummy plug fallback | accepted |
 | [0006](0006-viewports.md) | Viewports: one console, many independent views | proposed |
 | [0007](0007-h264-encode-scheduler.md) | H.264 for every viewport, behind an encode scheduler | proposed |
-| [0008](0008-native-ipad-client.md) | Native iPad client over a native viewport protocol | proposed — owner decision |
+| [0008](0008-native-ipad-client.md) | Native iPad client over a native viewport protocol | accepted (owner, 2026-10-04); v0.1 built |
 | [0009](0009-reuse-not-fork.md) | Reuse upstream and prior art; do not fork macrdp | proposed |

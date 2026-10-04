@@ -29,3 +29,16 @@ jobs:
       - uses: taiki-e/install-action@just
       - run: swift --version
       - run: just test
+
+  ipad:
+    # The iPad app compiles for the simulator against this commit's ViewportKit.
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install xcodegen
+      - run: cd apps/ipad && xcodegen generate --spec project.yml --quiet
+      - run: >
+          xcodebuild -project apps/ipad/mrdpd-ipad.xcodeproj -scheme mrdpd
+          -destination 'generic/platform=iOS Simulator' -derivedDataPath .build/ipad
+          CODE_SIGNING_ALLOWED=NO build -quiet

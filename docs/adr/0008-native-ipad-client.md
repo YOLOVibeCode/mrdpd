@@ -1,6 +1,6 @@
 # ADR 0008: Native iPad client over a native viewport protocol
 
-Status: **proposed — needs the owner's decision** (scope and Apple Developer account)
+Status: **accepted** — owner, 2026-10-04 ("yes, build the iPad app"). Team N42FM5L5KD for signing.
 Date: 2026-10-04
 
 ## Context
@@ -29,6 +29,17 @@ Server-side hotkeys, HUD, and overview (ADR 0006) make Windows App usable for on
 3. **Shared Swift package `ViewportProtocol`**, used by the host and the client. Message and framing contract tests run in `just test` on macOS (TCC-free).
 4. **Pairing.** The host shows a 6-digit code once. The client then stores the host key; the host stores a per-device key. The listener binds loopback or an explicit interface (Tailscale) like RDP (T1-SEC-04); it never binds 0.0.0.0.
 5. **RDP stays.** It works with any client and needs no install. The host core (capture, scheduler, input, viewports) is shared; the native front end is a thin Swift module beside the IronRDP engine.
+
+## As built (v0.1, 2026-10-04)
+
+- **Transport: TCP + TLS 1.2 ECDHE-PSK** (`TLS_ECDHE_PSK_WITH_CHACHA20_POLY1305_SHA256`), one connection per window, not QUIC. Network.framework supports it on both platforms without certificates. The server picks the key by device identity, so wrong or unknown keys fail the handshake. One connection per window means a busy 4K stream never blocks another window's input. QUIC can replace it behind `FramedConnection` later.
+- **Pairing: no 6-digit code.** A short code used directly as the key would allow offline guessing. Instead the Mac generates a 32-byte key per iPad and hands it over as an `mrdpd://pair` link: Universal Clipboard paste, QR scan, or the Camera app. The app confirms the Mac's name and address before storing a link opened from outside.
+- **Code**:
+  - `Packages/ViewportKit`: `ViewportProtocol`, `ViewportTransport`, `ViewportClient`.
+  - `Sources/HostKit` + `mrdpd-host`.
+  - `apps/ipad` (XcodeGen).
+  - Guide: [ipad.md](../ipad.md).
+- **Built ahead of V1–V4 at the owner's request.** The viewport core (display registry, per-window capture at client size, H.264, encode scheduler, input injection, cursor) is Swift in `HostKit`. RDP reuses it in V1–V4.
 
 ## Consequences
 

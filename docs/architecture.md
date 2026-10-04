@@ -2,6 +2,8 @@
 
 mrdpd is a Swift host that captures, encodes, and injects on macOS. It serves **viewports**, meaning client screens that each show any Mac display, through two front ends: an RDP engine (IronRDP behind a versioned C ABI) and, if [ADR 0008](adr/0008-native-ipad-client.md) is accepted, a native protocol for an iPad client.
 
+**Built so far:** the native path (v0.1): `Packages/ViewportKit` + `Sources/HostKit` + `apps/ipad`. It uses TCP + TLS-PSK instead of QUIC (see ADR 0008 "As built"). The RDP front end still runs the M6 pipeline (`mrdpd-serve`).
+
 Revised 2026-10-04 for the target scenario: [ADR 0006](adr/0006-viewports.md)–[0009](adr/0009-reuse-not-fork.md), spikes [R15](spikes/2026-10-04-r15-encode-budget.md) and [R16](spikes/2026-10-04-r16-clients-and-prior-art.md).
 
 ## Target scenario

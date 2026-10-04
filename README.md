@@ -14,9 +14,11 @@ Last iPad session (Tailscale `100.x:3390`, 3360×1890 RemoteFX): desktop **rende
 
 **`just live-check`** (2026-10-04) proves the server side with no human: click, right click, drag, wheel, typing, and Cmd+A reach the Mac at the mapped point, and key-to-photon is ~36 ms on loopback. Full-display repaints are ~110 ms, which is the smoothness problem. See [docs/live-check.md](docs/live-check.md).
 
+**iPad app (v0.1, 2026-10-04):** a native client is built ([docs/ipad.md](docs/ipad.md)). Each window shows one Mac display; put one on the iPad screen and one on the external 4K, and switch each with Ctrl+Option+1…9 or the picker. The Mac side is `just host-serve <ip>` plus `just host-pair <ip>`, and the app installs with `just ipad-device`. Verified in the simulator and over loopback; device testing is next.
+
 **Do next** (viewport track, [docs/milestones.md](docs/milestones.md))
 
-1. **V0**: one iPad session that scores M6 input and answers the Windows App questions (two windows? Cmd mapping? H.264?). Checklist: [docs/tasks/v0.md](docs/tasks/v0.md).
+1. **Install the iPad app and use it on the iPad + 4K** ([docs/ipad.md](docs/ipad.md)); log what works in `docs/tasks/v0.md`, along with the Windows App questions.
 2. **V1**: any Mac display, sized to the client screen (replaces M8). The Mac's display modes never change.
 3. **V2** switching (hotkeys, HUD, overview) → **V3** two screens at once → **V4** H.264 + client-side cursor. **V5** native iPad client only if [ADR 0008](docs/adr/0008-native-ipad-client.md) is accepted.
 
@@ -28,6 +30,10 @@ just test-local                    # Screen Recording + Accessibility
 just serve                         # 127.0.0.1:3390
 just serve host=<tailscale-ip>     # iPad
 just live-check                    # live loop: probe + serve + headless client (TCC; takes the screen ~30 s)
+just host-serve <ip>               # native host for the iPad app
+just host-pair <ip>                # pair an iPad (QR + clipboard link)
+just ipad-sim-check                # iPad app in the simulator against a real host
+just ipad-device                   # build + sign for the connected iPad
 ```
 
 TCC: same Terminal/Cursor needs **Screen Recording** and **Accessibility** ([docs/tcc.md](docs/tcc.md)).
@@ -59,6 +65,7 @@ TCC: same Terminal/Cursor needs **Screen Recording** and **Accessibility** ([doc
 | [docs/milestones.md](docs/milestones.md) | M0–M12 and the viewport track V0–V5 |
 | [docs/traceability.md](docs/traceability.md) | ID → test → status |
 | [docs/live-check.md](docs/live-check.md) | `just live-check`: automated live input + perf loop |
+| [docs/ipad.md](docs/ipad.md) | The iPad app: setup, two screens, shortcuts, security, limits |
 | [AGENTS.md](AGENTS.md) | Rules for every session |
 
 ## License

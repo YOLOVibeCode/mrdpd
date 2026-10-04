@@ -31,7 +31,11 @@ test-inject:
 test-swift: stub-engine
     swift test
 
-test: test-abi test-e2e test-swift
+# ViewportKit (native viewport protocol, transport, client) on macOS; TCC-free.
+test-viewportkit:
+    swift test --package-path Packages/ViewportKit
+
+test: test-abi test-e2e test-swift test-viewportkit
 
 test-frame:
     swift test --filter FrameKit
@@ -70,3 +74,38 @@ bench-encode:
     mkdir -p .build/bench
     swiftc -O -swift-version 5 scripts/bench/encode-budget.swift -o .build/bench/encode-budget
     .build/bench/encode-budget
+
+# --- Native iPad client (ADR 0008; docs/ipad.md) ---
+
+# Mac side: serve the iPad app on an explicit address (Tailscale or LAN). Needs Screen Recording +
+# Accessibility on this terminal. Never 0.0.0.0.
+host-serve bind port="3399":
+    swift build -c release --product mrdpd-host
+    .build/release/mrdpd-host serve --bind {{bind}} --port {{port}}
+
+# Pair an iPad: copies an mrdpd:// link to the clipboard and shows a QR code (secret; shown once).
+host-pair bind port="3399" name="iPad":
+    swift build -c release --product mrdpd-host
+    .build/release/mrdpd-host pair --bind {{bind}} --port {{port}} --name "{{name}}"
+
+# Generate apps/ipad/mrdpd-ipad.xcodeproj from project.yml (brew install xcodegen).
+ipad-project:
+    cd apps/ipad && xcodegen generate --spec project.yml --quiet
+
+# Build the iPad app for the simulator (no signing).
+ipad-build: ipad-project
+    xcodebuild -project apps/ipad/mrdpd-ipad.xcodeproj -scheme mrdpd -destination 'generic/platform=iOS Simulator' \
+        -derivedDataPath .build/ipad CODE_SIGNING_ALLOWED=NO build -quiet
+
+# The app in an iPad Pro 13" simulator against a real host on loopback; input logged, never posted.
+ipad-sim-check: ipad-project
+    swift build --product mrdpd-host
+    ./scripts/ipad-sim-check.sh
+
+# Build, sign (Automatic, your team), and install on the iPad connected by USB or Wi-Fi.
+ipad-device team="N42FM5L5KD": ipad-project
+    xcodebuild -project apps/ipad/mrdpd-ipad.xcodeproj -scheme mrdpd -configuration Release \
+        -destination 'generic/platform=iOS' -derivedDataPath .build/ipad DEVELOPMENT_TEAM={{team}} \
+        -allowProvisioningUpdates build -quiet
+    xcrun devicectl list devices
+    @echo "Install with: xcrun devicectl device install app --device <iPad name or id> .build/ipad/Build/Products/Release-iphoneos/mrdpd.app"

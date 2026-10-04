@@ -134,12 +134,12 @@ iPad Windows App is single-monitor (informative). iPad still gets T1-MON-01 exac
 
 ### 4.7a Native client (proposed, [ADR 0008](adr/0008-native-ipad-client.md))
 
-Rows become schedulable only if ADR 0008 is accepted.
+ADR 0008 accepted 2026-10-04; v0.1 built ([ipad.md](ipad.md)).
 
 | ID | Requirement | Tier | Milestone |
 | --- | --- | --- | --- |
 | T2-NAT-01 | `ViewportProtocol` Swift package: control, video, input, cursor messages and framing; contract tests in `just test` | T2 | V5 |
-| T2-NAT-02 | QUIC transport (Network.framework) with pairing code, stored per-device keys, explicit bind (loopback/Tailscale, never 0.0.0.0) | T2 | V5 |
+| T2-NAT-02 | Transport + pairing: TLS 1.2 ECDHE-PSK over TCP (Network.framework), one random 32-byte key per device delivered as an `mrdpd://pair` link (paste / QR, confirmed on the iPad), explicit bind (loopback/Tailscale, never 0.0.0.0), unpair revokes within 2 s. QUIC later behind the same API | T2 | V5 |
 | T2-NAT-03 | `mrdpd-ipad`: one window scene per viewport; works on the iPad screen and an external display under Stage Manager | T2 | V5 |
 | T2-NAT-04 | Picker strip with live thumbnails plus switch shortcuts | T2 | V5 |
 | T2-NAT-05 | Mac-correct input: HID usages with true Cmd/Option/Control; continuous scroll with phases; pointer lock option | T2 | V5 |
