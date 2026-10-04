@@ -28,10 +28,13 @@ Legend for **Boundary**: B1 wire, B2 ABI, B3 FrameSource, B4 InputSink, B5 clipb
 | T2-GFX-02 | B2 v2 | M10 first AVC test extracts ABI | M10 | C-IPAD WAN | M10 | untested |
 | T2-GFX-03 | B2 | after AVC420 | M10+ | — | M10+ | untested |
 | T1-MON-01 | B2/B3 | M8 resize callback | M8 size | C-IPAD rotate | M8 | untested |
+| T1-MON-02 | APP/B3 | planned: `DisplayCatalog` unit tests, `ServeArgs --display`, `SCKFrameSource` choice under `just test-local` | `mrdpd-serve --display` on a multi-display Mac | C-IPAD | M6 follow-up | untested |
 | T2-MON-01 | B1 | M9; [spike R1](spikes/2026-08-20-r1-static-multimon.md): upstream acceptor / patch (GCC `TS_UD_CS_MONITOR` → N monitors). Not OUT | per-monitor golden | C-DESK | M9 | untested |
-| T2-MON-02 | B1 | M9 layout change | E2E rearrange | C-DESK | M9 | untested |
+| T2-MON-02 | B1 | M9 layout change. 0.13.0 caps RDPEDISP at one monitor; 0.14 `monitor_count()` (#1918) lifts it ([R1 follow-up](spikes/2026-10-03-r1-host-display-picker.md)) | E2E rearrange | C-DESK | M9 | untested |
 | T2-MON-03 | B3 | M9 compositing | goldens | — | M9 | untested |
 | T2-MON-04 | APP | M9 flag + fallback doc | local | — | M9 | untested |
+| T2-MON-05 | B3/B4 | M9: `MonitorMapping` + `DesktopMap` ([ADR 0006](adr/0006-mac-display-mapping.md)) | two-monitor golden; seam crossing lands on the mapped display | C-DESK | M9 | untested |
+| T2-MON-06 | B3/B4 | after M8: `PickerState`, `PickerOverlay`, `PickerInputSink`; tab position from spike R15 | switch displays from the tab | C-IPAD / C-DESK | after M8 / M9 | untested |
 | T1-IN-01 | B2/B4 | B2: `engine/abi-tests/contract.c` (`mrdpd_stub_script_mouse`, `mrdpd_stub_script_key`); B4: `Tests/InputKitTests/*`; composition: `Tests/EngineKitTests/EngineKitTests.swift` (`testScriptedKeySequenceHopsToRecordingInputSink`) | `engine/mrdpd-engine/tests/input_sequence.rs` FastPath A down/up | — | M0/M3 | e2e-green |
 | T1-IN-02 | DATA | `Tests/InputKitTests/UsKeymapTests.swift` (`Sources/InputKit/Keymap/UsKeymap.swift`) | — | — | M3 | contract-green |
 | T1-IN-03 | B4 | `input_sequence.rs` move / left / vertical wheel in virtual-desktop pixels; Retina: `Tests/InputKitTests/DisplayMapTests.swift` + `InjectionPlanTests` | M3 FastPath; M6 `DisplayMap` | C-IPAD deferred | M3 / M6 | e2e-green |

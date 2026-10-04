@@ -68,12 +68,15 @@ RDP virtual desktop: primary at (0,0); others relative; negative origins allowed
 | ID | Requirement | Protocol / API | Engine | Tier | Milestone |
 | --- | --- | --- | --- | --- | --- |
 | T1-MON-01 | Single-monitor dynamic resize (client rotation / RDPEDISP one monitor) | MS-RDPEDISP | implemented | T1 | M8 |
+| T1-MON-02 | Choose which Mac display a single-monitor session shows. Displays are lettered A, B, C… left to right by global frame (then top to bottom); default is the main display ([ADR 0006](adr/0006-mac-display-mapping.md)) | SCK + CLI | n/a | T1 | M6 follow-up |
 | T2-MON-01 | Static multimon at connect (GCC monitor list) | GCC | **spike R1**: upstream acceptor / patch (not OUT) | T2 | M9 |
-| T2-MON-02 | Dynamic add/remove/rearrange | MS-RDPEDISP | implemented | T2 | M9 |
-| T2-MON-03 | One SCStream per SCDisplay; dirty rects translated into virtual-desktop space; Retina consistent | SCK | n/a | T2 | M9 |
+| T2-MON-02 | Dynamic add/remove/rearrange | MS-RDPEDISP | 0.13.0 caps RDPEDISP at one monitor; 0.14 lets the display raise it (IronRDP #1918). See [R1 follow-up](spikes/2026-10-03-r1-host-display-picker.md) | T2 | M9 |
+| T2-MON-03 | One SCStream per captured SCDisplay (T2-MON-05 picks which); dirty rects translated into virtual-desktop space; Retina consistent | SCK | n/a | T2 | M9 |
 | T2-MON-04 | Virtual displays when client wants more monitors than exist / lid closed (`CGVirtualDisplay`, flag); HDMI dummy plug documented fallback | private API **R3** | n/a | T2 | M9 |
+| T2-MON-05 | Client has fewer monitors than the Mac: chosen Mac displays fill the client monitors; default left to right (A on 1, B on 2), the rest hidden. The pointer crosses seams by absolute position | GCC / MS-RDPEDISP layout, SCK, CGEvent | needs T2-MON-01 | T2 | M9 |
+| T2-MON-06 | In-session display picker that mrdpd draws into the frames: translucent tab at top center (about 10% of the monitor width; position per R15), Mac display tiles, an outline step to pick the target monitor, swap when the display is already shown. Its clicks never reach the Mac | pixels + FastPath | n/a | T2 | after M8 (one monitor) / M9 (two) |
 
-iPad Windows App is single-monitor (informative). iPad still gets T1-MON-01 exact-fit resize.
+iPad Windows App is single-monitor (informative). iPad still gets T1-MON-01 exact-fit resize, and T1-MON-02 picks which Mac display it shows.
 
 ### 4.4 Input
 
@@ -151,4 +154,4 @@ iPad Windows App is single-monitor (informative). iPad still gets T1-MON-01 exac
 
 ## 8. Open spikes
 
-See [risks.md](risks.md). R1, R2, R5 spikes are written (M1 DoD). R3 accepted as flag+dummy-plug. R4 accepted as RemoteFX fallback + engine swap.
+See [risks.md](risks.md). R1, R2, R5 spikes are written (M1 DoD). R3 accepted as flag+dummy-plug. R4 accepted as RemoteFX fallback + engine swap. R15 (picker tab position, T2-MON-06) is spiking from 2026-10-04.
