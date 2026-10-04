@@ -1,5 +1,5 @@
 import AppKit
-import ScreenCaptureKit
+@preconcurrency import ScreenCaptureKit
 
 // Lab oracle for `just live-check` (T1-IN-03, T1-IN-04, T1-PERF-02/03/04).
 // Covers the captured display (first SCDisplay, same as `mrdpd-serve`) with one
