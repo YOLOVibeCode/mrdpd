@@ -6,6 +6,13 @@ Read this first in a new session, then [AGENTS.md](../AGENTS.md), [method.md](me
 
 **Update 2026-10-04 — architecture pass.** The owner's target is a Mac with three displays driven from an iPad Pro plus an external 4K, each client screen an independent, switchable **viewport**. After M6, the viewport track V0–V5 ([milestones.md](milestones.md); ADRs [0006](adr/0006-viewports.md)–[0009](adr/0009-reuse-not-fork.md)) is the priority and replaces M8–M10. Evidence: spikes [R15](spikes/2026-10-04-r15-encode-budget.md) (encode budget on the M4 Max) and [R16](spikes/2026-10-04-r16-clients-and-prior-art.md) (Windows App iPadOS, Jump Desktop, macrdp, IronRDP 0.13).
 
+**Update 2026-10-04 (later) — iPad app v0.1.** The owner accepted ADR 0008 ("yes, build the iPad app"). The native path is built ahead of the RDP V1–V4 track ([ipad.md](ipad.md)):
+- `Packages/ViewportKit`: protocol, TLS-PSK transport, client.
+- `HostKit` + `mrdpd-host`: per-window SCK capture at client size, VideoToolbox H.264, encode scheduler, CGEvent input, cursor, thumbnails, pairing.
+- `apps/ipad`: SwiftUI/UIKit app, one window per display.
+
+Green: `just test` (incl. loopback end to end, two windows at once) and `just ipad-sim-check`. **Next:** install on the owner's iPad (`just ipad-device`) and try it on the iPad + 4K with Stage Manager.
+
 ## Where we are
 
 The Mac can serve the **logged-in console** over RDP (RemoteFX, ABI v1). Windows App on iPad **saw the desktop and could type some keys**. It was **not smooth**. Session size is locked to the first `SCDisplay` (lab: **3360×1890**). Clicks/Cmd/scroll were not fully scored. Changing iPad resolution does **not** yet resize the stream (M8) and must **not** change the Mac’s hardware display mode without an ADR.

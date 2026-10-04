@@ -24,7 +24,10 @@ guard CGPreflightScreenCaptureAccess() else {
 }
 
 let content = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: true)
-guard let display = content.displays.first,
+// Default: the first SCDisplay (what `mrdpd-serve` captures). MRDPD_PROBE_DISPLAY=<id> picks another
+// (the native host starts on the main display).
+let wanted = ProcessInfo.processInfo.environment["MRDPD_PROBE_DISPLAY"].flatMap(UInt32.init)
+guard let display = wanted.flatMap({ id in content.displays.first { $0.displayID == id } }) ?? content.displays.first,
       let screen = NSScreen.screens.first(where: {
           ($0.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? NSNumber)?.uint32Value
               == display.displayID

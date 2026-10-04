@@ -19,7 +19,7 @@ Rules for every human and every agent working in this repository. Read this file
 
 - Implement T1 + T2 only. T3 and `OUT-*` are not work.
 - **M6 is the survival gate** (live screen + injected input from iPad). Do not start T2 feature work (multimon, EGFX, audio, file clipboard) until M6 is interop-green, unless a T2 item is required to unblock a T1 bug.
-- **After M6, the viewport track V0–V5 is the priority** ([milestones.md](docs/milestones.md), ADRs 0006–0009). H.264 and the client-side cursor are T1 there (ADR 0007). Do not start M7 clipboard, M11 audio, or M12 daemon before V3 unless the owner asks. V5 (native iPad client) only after the owner accepts ADR 0008.
+- **After M6, the viewport track V0–V5 is the priority** ([milestones.md](docs/milestones.md), ADRs 0006–0009). H.264 and the client-side cursor are T1 there (ADR 0007). Do not start M7 clipboard, M11 audio, or M12 daemon before V3 unless the owner asks. V5 (native iPad client, ADR 0008) was accepted on 2026-10-04 and v0.1 is built (`docs/ipad.md`): native-path changes keep `just test` and `just ipad-sim-check` green.
 - Rolling-wave tasks: `docs/tasks/m1.md`–`m6.md` (`m2`/`m5`/`m6` iPad deferred) and `docs/tasks/v0.md`. Write `vN.md` only when the previous V gate is green. Do not write novel task lists for M7+ until the previous gate is green.
 
 ## Boundaries

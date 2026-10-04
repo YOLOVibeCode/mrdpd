@@ -24,9 +24,9 @@ Legend for **Boundary**: B1 wire, B1n native wire (proposed), B2 ABI, B3 FrameSo
 | T1-GFX-03 | B1 | `engine/mrdpd-engine/tests/pattern_1080.rs` (and M1 `solid_color.rs`): QoiZ compile-out; session decodes RemoteFX surface | 1080p quadrant BMP | C-IPAD live view deferred (no device); C-FREERDP pattern still M2 | M2 / M5 | e2e-green |
 | T1-GFX-04 | B3 | Dirty list: `Tests/FrameKitTests/DirtyRectsTests.swift` + `SCKFrameSource` (`just test-local`). Pacer: `Tests/FrameKitTests/FramePacerTests.swift`. Pump: `EngineKitTests.testPacedPumpDropsSecondCallInsideInterval` | `just serve` live path | — | M4 / M5 | contract-green |
 | T1-GFX-05 | B3 | `Tests/FrameKitTests/SCKSettingsTests.swift`; `SCKFrameSource.showsCursor` under `just test-local` | `just serve` | C-IPAD deferred | M5 | contract-green |
-| T1-GFX-06 | B1/B8 | planned: pointer PDU shape + position; hidden when the viewport's source lacks the cursor (`live_check.rs`) | V4 client cursor | C-IPAD | V4 | untested |
-| T1-GFX-07 | B1/B8 | planned: EGFX AVC420 from VideoToolbox, decoded by the headless client; RemoteFX fallback when AVC is not advertised | V4 H.264 | C-IPAD (AVC caps from V0) | V4 | untested |
-| T1-GFX-08 | B8 | planned: `EncodeScheduler` contract on a `RecordingEncoder` (focus policy, tiling, drop-oldest); `just bench-encode` ([spike R15](spikes/2026-10-04-r15-encode-budget.md)) | V4 two viewports | — | V4 | untested |
+| T1-GFX-06 | B1/B8 | planned: pointer PDU shape + position; hidden when the viewport's source lacks the cursor (`live_check.rs`) | V4 client cursor | C-IPAD | V4 | untested (native built: `CursorMonitor` + iPad cursor layer) |
+| T1-GFX-07 | B1/B8 | native: `H264Encoder` → `NativeLoopbackTests` decodes with VideoToolbox; RDP planned: EGFX AVC420 from VideoToolbox, decoded by the headless client; RemoteFX fallback when AVC is not advertised | V4 H.264 | C-IPAD (AVC caps from V0) | V4 | e2e-green (native path); RDP EGFX pending |
+| T1-GFX-08 | B8 | `EncodePolicyTests`; planned: tiling, `EncodeScheduler` contract on a `RecordingEncoder` (focus policy, tiling, drop-oldest); `just bench-encode` ([spike R15](spikes/2026-10-04-r15-encode-budget.md)) | V4 two viewports | — | V4 | contract-green (policy); tiling pending |
 | T2-GFX-01 | — | superseded by T1-GFX-06 ([ADR 0007](adr/0007-h264-encode-scheduler.md)) | — | — | — | superseded |
 | T2-GFX-02 | — | superseded by T1-GFX-07 ([ADR 0007](adr/0007-h264-encode-scheduler.md)) | — | — | — | superseded |
 | T2-GFX-03 | B2 | after AVC420 | M10+ | — | M10+ | untested |
@@ -35,12 +35,12 @@ Legend for **Boundary**: B1 wire, B1n native wire (proposed), B2 ABI, B3 FrameSo
 | T2-MON-02 | B1 | M9 layout change | E2E rearrange | C-DESK | M9 | untested |
 | T2-MON-03 | B3 | M9 compositing | goldens | — | M9 | untested |
 | T2-MON-04 | APP | M9 flag + fallback doc | local | — | M9 | untested |
-| T1-VP-01 | B3/B7 | planned: `DisplayRegistry` contract on a fake display list; `SCKFrameSource` for a chosen display under `just test-local` | `live_check.rs` probe on a non-first display | C-IPAD | V1 | untested |
-| T1-VP-02 | B2/B3/B4 | planned: aspect-fit geometry + `DisplayMap` through bars (TCC-free); headless client requests a size and gets it | `live_check.rs` click lands through letterbox | C-IPAD full screen + 4K window | V1 | untested |
-| T1-VP-03 | B4/B7 | planned: hotkey matcher (pure); `ViewportRouter` switch on a recording double; HUD composited only into the switched viewport | `live_check.rs` switch < 300 ms to first new frame | C-IPAD (hotkeys from V0) | V2 | untested |
+| T1-VP-01 | B3/B7 | native: `DisplayRegistry` + `StaticDisplayList` in `NativeLoopbackTests`; RDP planned: `SCKFrameSource` for a chosen display under `just test-local` | `live_check.rs` probe on a non-first display | C-IPAD | V1 | e2e-green (native path); RDP pending |
+| T1-VP-02 | B2/B3/B4 | native: `GeometryTests` + `NativeLoopbackTests` (encode size, click mapping, resize); RDP planned: aspect-fit geometry + `DisplayMap` through bars (TCC-free); headless client requests a size and gets it | `live_check.rs` click lands through letterbox | C-IPAD full screen + 4K window | V1 | e2e-green (native path); RDP pending |
+| T1-VP-03 | B4/B7 | native: `ShortcutTests`, `NativeLoopbackTests` switch, `just ipad-sim-check`; RDP planned: hotkey matcher (pure); `ViewportRouter` switch on a recording double; HUD composited only into the switched viewport | `live_check.rs` switch < 300 ms to first new frame | C-IPAD (hotkeys from V0) | V2 | e2e-green (native path); RDP pending |
 | T1-VP-04 | B7 | planned: overview layout + hit-test (pure) | `live_check.rs` overview tap selects | C-IPAD | V2 | untested |
-| T1-VP-05 | B2/B7 | planned: ABI v2 contract (connection handles) on StubEngine and `mrdpd-engine` | `live_check.rs` two connections, different displays | C-IPAD two windows or two clients | V3 | untested |
-| T1-VP-06 | B4/B7 | planned: focus/cursor arbitration state machine (pure, 500 ms hysteresis) | `live_check.rs` alternating input from two viewports | C-IPAD | V3 | untested |
+| T1-VP-05 | B2/B7 | native: `NativeLoopbackTests.testTwoWindowsShowDifferentDisplaysAtOnce`; RDP planned: ABI v2 contract (connection handles) on StubEngine and `mrdpd-engine` | `live_check.rs` two connections, different displays | C-IPAD two windows or two clients | V3 | e2e-green (native path); RDP pending |
+| T1-VP-06 | B4/B7 | `EncodePolicyTests.testSchedulerTellsTheDemotedViewport`; cursor visibility per viewport in `ViewportSession`; planned: focus/cursor arbitration state machine (pure, 500 ms hysteresis) | `live_check.rs` alternating input from two viewports | C-IPAD | V3 | contract-green (scheduler recency) |
 | T2-VP-07 | B4 | planned: move-window-to-display via AX under `just test-local` | — | — | after V3 | untested |
 | T1-IN-01 | B2/B4 | B2: `engine/abi-tests/contract.c` (`mrdpd_stub_script_mouse`, `mrdpd_stub_script_key`); B4: `Tests/InputKitTests/*`; composition: `Tests/EngineKitTests/EngineKitTests.swift` (`testScriptedKeySequenceHopsToRecordingInputSink`) | `engine/mrdpd-engine/tests/input_sequence.rs` FastPath A down/up | — | M0/M3 | e2e-green |
 | T1-IN-02 | DATA | `Tests/InputKitTests/UsKeymapTests.swift` (`Sources/InputKit/Keymap/UsKeymap.swift`) | — | — | M3 | contract-green |
@@ -59,12 +59,12 @@ Legend for **Boundary**: B1 wire, B1n native wire (proposed), B2 ABI, B3 FrameSo
 | T3-DEV-02 | — | — | — | — | after M12 | backlog |
 | OUT-DEV-01 | — | — | — | — | — | accepted-out |
 | OUT-DEV-02 | — | — | — | — | — | accepted-out |
-| T2-NAT-01 | B1n | planned (only if [ADR 0008](adr/0008-native-ipad-client.md) accepted): `ViewportProtocol` message + framing contract tests | — | C-NATIVE | V5 | untested |
-| T2-NAT-02 | B1n | planned: pairing + QUIC loopback transport test | — | C-NATIVE | V5 | untested |
-| T2-NAT-03 | B1n | planned: scene-per-viewport UI test on device | — | C-NATIVE | V5 | untested |
-| T2-NAT-04 | B1n | planned: picker strip thumbnails + switch | — | C-NATIVE | V5 | untested |
-| T2-NAT-05 | B1n/B4 | planned: HID usage → keycode table; scroll phases → continuous CGEvent scroll | — | C-NATIVE | V5 | untested |
-| T2-NAT-06 | B1n/B5 | planned: local cursor + clipboard round-trip | — | C-NATIVE | V5 | untested |
+| T2-NAT-01 | B1n | `Packages/ViewportKit/Tests/ViewportProtocolTests` (framing incl. byte-at-a-time, every message and packet round trip) | `Tests/HostKitTests/NativeLoopbackTests.swift` | C-NATIVE sim | V5 | e2e-green |
+| T2-NAT-02 | B1n | `ViewportTransportTests` (TLS-PSK both ways, 3 MB frame, wrong key, unknown device, 0.0.0.0 refused); `PairingStoreTests`; `PairingTests` (link format) | `NativeLoopbackTests` (unpaired key refused, device paired while running accepted) | C-NATIVE sim | V5 | e2e-green |
+| T2-NAT-03 | B1n | `apps/ipad` scene per window (`WindowGroup`, multiple scenes) | `just ipad-sim-check` (UI test against a real host) | C-NATIVE sim; device + Stage Manager two-window pending | V5 | e2e-green |
+| T2-NAT-04 | B1n | `ShortcutTests`; thumbnails in `NativeLoopbackTests` | `just ipad-sim-check`: Ctrl+Option+1/2 switch, digits never reach the Mac | C-NATIVE sim | V5 | e2e-green |
+| T2-NAT-05 | B1n/B4 | `HidKeymapTests`; `NativeInputInjectorTests` (Cmd flag, click mapping + click count, continuous scroll with phases and fractions, release all, key repeat); `MomentumScrollerTests` | `just ipad-sim-check`: tap → click, long press → right click, drag, HID keys with Cmd | C-NATIVE sim; device pending | V5 | e2e-green |
+| T2-NAT-06 | B1n/B5 | cursor: `CursorMonitor` + app cursor layer built, no automated test yet; clipboard: Universal Clipboard only (no channel) | — | device pending | V5 | untested |
 | OUT-01 | — | — | — | — | — | accepted-out |
 | OUT-02 | — | — | — | — | — | accepted-out |
 | OUT-03 | — | — | — | — | — | accepted-out |
