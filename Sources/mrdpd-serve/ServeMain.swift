@@ -61,12 +61,20 @@ enum ServeMain {
                 pixelWidth: source.pixelWidth,
                 pixelHeight: source.pixelHeight
             )
-            let sink: any InputSink
+            var sink: any InputSink
             do {
                 sink = try CGEventInputSink(map: map)
             } catch CGEventInputSinkError.denied {
                 fputs("T1-OPS-03: Accessibility TCC missing; see docs/tcc.md\n", stderr)
                 exit(1)
+            }
+            var frames: any FrameSource = source
+            var firstFrame = first
+            if let tab = SpikeTab.fromEnvironment(frameWidth: Int(first.width), frameHeight: Int(first.height)) {
+                sink = SpikeTabInputSink(inner: sink, tab: tab)
+                frames = SpikeTabFrameSource(inner: source, tab: tab)
+                firstFrame = tab.draw(into: first)
+                fputs("R15: spike tab at \(tab.x),\(tab.y),\(tab.width),\(tab.height) (x,y,w,h)\n", stderr)
             }
             let engine = try Engine(dylibPath: dylib)
             try engine.start(
@@ -78,14 +86,14 @@ enum ServeMain {
                 ),
                 sink: sink
             )
-            try engine.push(first)
+            try engine.push(firstFrame)
             fputs(
                 "mrdpd-serve listening \(host):\(port) \(first.width)x\(first.height)"
                     + " display \(source.served.letter) (NLA user mrdpd)\n",
                 stderr
             )
 
-            let pump = FramePump(source: source, engine: engine)
+            let pump = FramePump(source: frames, engine: engine)
             while true {
                 if try await pump.pumpOnce() {
                     continue
