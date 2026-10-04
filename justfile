@@ -63,3 +63,10 @@ live-check filter="":
     swift build -c release --product mrdpd-probe
     MRDP_ENGINE_DYLIB="$PWD/engine/target/release/libmrdpd_engine.dylib" MRDPD_BIN_DIR="$PWD/.build/release" \
         cargo test --release --manifest-path engine/Cargo.toml -p mrdpd-engine --test live_check -- --ignored --test-threads=1 --nocapture {{filter}}
+
+# Encode budget (spike R15, ADR 0007): concurrent VideoToolbox H.264/HEVC viewports at 60 fps.
+# Synthetic desktop-like frames, no TCC. ~2 min. Not part of `just test`.
+bench-encode:
+    mkdir -p .build/bench
+    swiftc -O -swift-version 5 scripts/bench/encode-budget.swift -o .build/bench/encode-budget
+    .build/bench/encode-budget

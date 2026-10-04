@@ -1,16 +1,16 @@
 # Traceability matrix
 
-Status values: `untested` → `contract-green` → `e2e-green` → `interop-green`. Non-goals: `accepted-out`. T3: `backlog`.
+Status values: `untested` → `contract-green` → `e2e-green` → `interop-green`. Non-goals: `accepted-out`. T3: `backlog`. Re-filed by an ADR: `superseded`.
 
 Update this table in the same change as the test. Empty **Test** cells after a milestone starts are defects.
 
-Legend for **Boundary**: B1 wire, B2 ABI, B3 FrameSource, B4 InputSink, B5 clipboard (M7+), B6 audio (M11+), APP app/config, DATA pure data.
+Legend for **Boundary**: B1 wire, B1n native wire (proposed), B2 ABI, B3 FrameSource, B4 InputSink, B5 clipboard (M7+), B6 audio (M11+), B7 viewport control (V1+), B8 viewport encoder (V4+), APP app/config, DATA pure data.
 
 | ID | Boundary | Contract test (path) | E2E | Interop | Milestone | Status |
 | --- | --- | --- | --- | --- | --- | --- |
 | T1-SEC-01 | B2 | `engine/mrdpd-engine/tests/solid_color.rs` (TLS listen + handshake) | `solid_color.rs` BMP | C-HEADLESS | M1 | e2e-green |
 | T1-SEC-02 | B2 | `solid_color.rs` CredSSP / NLA (`with_hybrid` + config username/password) | M1 handshake | C-IPAD M2+ | M1 | e2e-green |
-| T1-SEC-03 | APP | sequential `RdpServer::run` in `engine/mrdpd-engine/src/lib.rs` (one `run_connection`; second peer waits — ADR 0004); one-client proof `solid_color.rs` | M1 one client | — | M1 | e2e-green |
+| T1-SEC-03 | APP | sequential `RdpServer::run` in `engine/mrdpd-engine/src/lib.rs` (one `run_connection`; second peer waits — ADR 0004); one-client proof `solid_color.rs`. V3: up to four concurrent viewports (ADR 0006) — planned `live_check.rs` two-connection test | M1 one client | — | M1 / V3 | e2e-green |
 | T1-SEC-04 | APP | `engine/abi-tests/contract.c` (B2 dummy listen / `MRDPD_ERR_BIND`); `mrdpd-pattern` and `BindHost` / `mrdpd-serve` refuse `0.0.0.0`/`::` (exit 4); E2E binds `127.0.0.1` only. APP allowlist remains M12 | M1/M2/M5 loopback | — | M1/M12 | e2e-green |
 | T1-SEC-05 | APP | planned lockout unit | — | — | M12 | untested |
 | T1-SEC-06 | APP | planned release build flag test | — | — | M12 | untested |
@@ -24,14 +24,24 @@ Legend for **Boundary**: B1 wire, B2 ABI, B3 FrameSource, B4 InputSink, B5 clipb
 | T1-GFX-03 | B1 | `engine/mrdpd-engine/tests/pattern_1080.rs` (and M1 `solid_color.rs`): QoiZ compile-out; session decodes RemoteFX surface | 1080p quadrant BMP | C-IPAD live view deferred (no device); C-FREERDP pattern still M2 | M2 / M5 | e2e-green |
 | T1-GFX-04 | B3 | Dirty list: `Tests/FrameKitTests/DirtyRectsTests.swift` + `SCKFrameSource` (`just test-local`). Pacer: `Tests/FrameKitTests/FramePacerTests.swift`. Pump: `EngineKitTests.testPacedPumpDropsSecondCallInsideInterval` | `just serve` live path | — | M4 / M5 | contract-green |
 | T1-GFX-05 | B3 | `Tests/FrameKitTests/SCKSettingsTests.swift`; `SCKFrameSource.showsCursor` under `just test-local` | `just serve` | C-IPAD deferred | M5 | contract-green |
-| T2-GFX-01 | B1 | after M6 | — | C-DESK | after M6 | untested |
-| T2-GFX-02 | B2 v2 | M10 first AVC test extracts ABI | M10 | C-IPAD WAN | M10 | untested |
+| T1-GFX-06 | B1/B8 | planned: pointer PDU shape + position; hidden when the viewport's source lacks the cursor (`live_check.rs`) | V4 client cursor | C-IPAD | V4 | untested |
+| T1-GFX-07 | B1/B8 | planned: EGFX AVC420 from VideoToolbox, decoded by the headless client; RemoteFX fallback when AVC is not advertised | V4 H.264 | C-IPAD (AVC caps from V0) | V4 | untested |
+| T1-GFX-08 | B8 | planned: `EncodeScheduler` contract on a `RecordingEncoder` (focus policy, tiling, drop-oldest); `just bench-encode` ([spike R15](spikes/2026-10-04-r15-encode-budget.md)) | V4 two viewports | — | V4 | untested |
+| T2-GFX-01 | — | superseded by T1-GFX-06 ([ADR 0007](adr/0007-h264-encode-scheduler.md)) | — | — | — | superseded |
+| T2-GFX-02 | — | superseded by T1-GFX-07 ([ADR 0007](adr/0007-h264-encode-scheduler.md)) | — | — | — | superseded |
 | T2-GFX-03 | B2 | after AVC420 | M10+ | — | M10+ | untested |
-| T1-MON-01 | B2/B3 | M8 resize callback | M8 size | C-IPAD rotate | M8 | untested |
+| T1-MON-01 | B2/B3 | part of T1-VP-02: RDPEDISP `request_layout` → viewport resize | V1 size | C-IPAD rotate / Stage Manager resize | V1 (was M8) | untested |
 | T2-MON-01 | B1 | M9; [spike R1](spikes/2026-08-20-r1-static-multimon.md): upstream acceptor / patch (GCC `TS_UD_CS_MONITOR` → N monitors). Not OUT | per-monitor golden | C-DESK | M9 | untested |
 | T2-MON-02 | B1 | M9 layout change | E2E rearrange | C-DESK | M9 | untested |
 | T2-MON-03 | B3 | M9 compositing | goldens | — | M9 | untested |
 | T2-MON-04 | APP | M9 flag + fallback doc | local | — | M9 | untested |
+| T1-VP-01 | B3/B7 | planned: `DisplayRegistry` contract on a fake display list; `SCKFrameSource` for a chosen display under `just test-local` | `live_check.rs` probe on a non-first display | C-IPAD | V1 | untested |
+| T1-VP-02 | B2/B3/B4 | planned: aspect-fit geometry + `DisplayMap` through bars (TCC-free); headless client requests a size and gets it | `live_check.rs` click lands through letterbox | C-IPAD full screen + 4K window | V1 | untested |
+| T1-VP-03 | B4/B7 | planned: hotkey matcher (pure); `ViewportRouter` switch on a recording double; HUD composited only into the switched viewport | `live_check.rs` switch < 300 ms to first new frame | C-IPAD (hotkeys from V0) | V2 | untested |
+| T1-VP-04 | B7 | planned: overview layout + hit-test (pure) | `live_check.rs` overview tap selects | C-IPAD | V2 | untested |
+| T1-VP-05 | B2/B7 | planned: ABI v2 contract (connection handles) on StubEngine and `mrdpd-engine` | `live_check.rs` two connections, different displays | C-IPAD two windows or two clients | V3 | untested |
+| T1-VP-06 | B4/B7 | planned: focus/cursor arbitration state machine (pure, 500 ms hysteresis) | `live_check.rs` alternating input from two viewports | C-IPAD | V3 | untested |
+| T2-VP-07 | B4 | planned: move-window-to-display via AX under `just test-local` | — | — | after V3 | untested |
 | T1-IN-01 | B2/B4 | B2: `engine/abi-tests/contract.c` (`mrdpd_stub_script_mouse`, `mrdpd_stub_script_key`); B4: `Tests/InputKitTests/*`; composition: `Tests/EngineKitTests/EngineKitTests.swift` (`testScriptedKeySequenceHopsToRecordingInputSink`) | `engine/mrdpd-engine/tests/input_sequence.rs` FastPath A down/up | — | M0/M3 | e2e-green |
 | T1-IN-02 | DATA | `Tests/InputKitTests/UsKeymapTests.swift` (`Sources/InputKit/Keymap/UsKeymap.swift`) | — | — | M3 | contract-green |
 | T1-IN-03 | B4 | `input_sequence.rs` move / left / vertical wheel in virtual-desktop pixels; Retina: `Tests/InputKitTests/DisplayMapTests.swift` + `InjectionPlanTests`; live: `live_check.rs` click / right click / drag / wheel land on the `DisplayMap` point (`just live-check`) | M3 FastPath; M6 `DisplayMap`; live probe 1600×1200 | C-IPAD deferred | M3 / M6 | e2e-green |
@@ -49,6 +59,12 @@ Legend for **Boundary**: B1 wire, B2 ABI, B3 FrameSource, B4 InputSink, B5 clipb
 | T3-DEV-02 | — | — | — | — | after M12 | backlog |
 | OUT-DEV-01 | — | — | — | — | — | accepted-out |
 | OUT-DEV-02 | — | — | — | — | — | accepted-out |
+| T2-NAT-01 | B1n | planned (only if [ADR 0008](adr/0008-native-ipad-client.md) accepted): `ViewportProtocol` message + framing contract tests | — | C-NATIVE | V5 | untested |
+| T2-NAT-02 | B1n | planned: pairing + QUIC loopback transport test | — | C-NATIVE | V5 | untested |
+| T2-NAT-03 | B1n | planned: scene-per-viewport UI test on device | — | C-NATIVE | V5 | untested |
+| T2-NAT-04 | B1n | planned: picker strip thumbnails + switch | — | C-NATIVE | V5 | untested |
+| T2-NAT-05 | B1n/B4 | planned: HID usage → keycode table; scroll phases → continuous CGEvent scroll | — | C-NATIVE | V5 | untested |
+| T2-NAT-06 | B1n/B5 | planned: local cursor + clipboard round-trip | — | C-NATIVE | V5 | untested |
 | OUT-01 | — | — | — | — | — | accepted-out |
 | OUT-02 | — | — | — | — | — | accepted-out |
 | OUT-03 | — | — | — | — | — | accepted-out |
@@ -60,6 +76,7 @@ Legend for **Boundary**: B1 wire, B2 ABI, B3 FrameSource, B4 InputSink, B5 clipb
 | T1-PERF-04 | APP | `live_check.rs` `t1_perf_04_idle_cpu` (`just live-check`): `mrdpd-serve` CPU over 5 s idle < 40 % of one core ([bench.md](bench.md)) | 2026-10-04: 0.2–0.4 % at 1600×1200 | note | M5 | e2e-green |
 | T2-PERF-01 | B1 | M10 A/B | — | WAN note | M10 | untested |
 | T2-PERF-02 | B1 | M9 | — | C-DESK | M9 | untested |
+| T1-PERF-05 | B8 | `just bench-encode` baseline ([spike R15](spikes/2026-10-04-r15-encode-budget.md): 4K halves@60 + iPad@30 = 24/19/14 ms); planned live two-viewport check | V4 | note | V4 | untested |
 | T1-OPS-01 | APP | M12 | clean VM | — | M12 | untested |
 | T1-OPS-02 | APP | M12 config parse | — | — | M12 | untested |
 | T1-OPS-03 | APP | `docs/tcc.md`; SCK + CGEvent tests skip unless `MRDPD_TEST_LOCAL=1`, fail if TCC missing; `mrdpd-serve` exits if Accessibility missing | — | human | M4/M6/M12 | contract-green |

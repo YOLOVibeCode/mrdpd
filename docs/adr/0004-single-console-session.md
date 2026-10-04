@@ -1,6 +1,6 @@
 # ADR 0004: Single console session, one active client
 
-Status: accepted  
+Status: accepted; the "one active client" rule is superseded by [ADR 0006](0006-viewports.md) when it is accepted  
 Date: 2026-08-20
 
 ## Context

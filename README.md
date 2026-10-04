@@ -2,6 +2,8 @@
 
 Apache-licensed **RDP server for macOS**. [Windows App](https://apps.apple.com/app/windows-app/id1295203466) on an iPad (and FreeRDP / desktop Windows App) should drive the logged-in Mac console — lid-closed / repair-window included.
 
+**Target (2026-10-04):** a Mac with several displays, driven from an iPad Pro with an external 4K monitor. Each client screen is an independent **viewport** that shows any Mac display, switchable from that screen. See [docs/architecture.md](docs/architecture.md) and ADRs [0006](docs/adr/0006-viewports.md)–[0009](docs/adr/0009-reuse-not-fork.md).
+
 **Pre-alpha.** Full snapshot: [docs/checkpoint.md](docs/checkpoint.md) (2026-08-21). Session rules: [AGENTS.md](AGENTS.md).
 
 ## Pick up here
@@ -12,11 +14,11 @@ Last iPad session (Tailscale `100.x:3390`, 3360×1890 RemoteFX): desktop **rende
 
 **`just live-check`** (2026-10-04) proves the server side with no human: click, right click, drag, wheel, typing, and Cmd+A reach the Mac at the mapped point, and key-to-photon is ~36 ms on loopback. Full-display repaints are ~110 ms, which is the smoothness problem. See [docs/live-check.md](docs/live-check.md).
 
-**Do next**
+**Do next** (viewport track, [docs/milestones.md](docs/milestones.md))
 
-1. Re-run iPad: confirm click, drag, scroll, Cmd on Windows App (live-check already proves the server side). Log in [docs/tasks/m6.md](docs/tasks/m6.md).
-2. **M8** (`T1-MON-01`): RDPEDISP + SCK reconfigure to iPad size. Helps fit and smoothness. Does **not** change the Mac’s hardware resolution (that would need an ADR).
-3. Do **not** start T2 (multimon, EGFX/H.264, audio, file clipboard) until M6 is honestly interop-green.
+1. **V0**: one iPad session that scores M6 input and answers the Windows App questions (two windows? Cmd mapping? H.264?). Checklist: [docs/tasks/v0.md](docs/tasks/v0.md).
+2. **V1**: any Mac display, sized to the client screen (replaces M8). The Mac's display modes never change.
+3. **V2** switching (hotkeys, HUD, overview) → **V3** two screens at once → **V4** H.264 + client-side cursor. **V5** native iPad client only if [ADR 0008](docs/adr/0008-native-ipad-client.md) is accepted.
 
 Lab NLA: user `mrdpd`, password `changeme` (not the Mac login). Bind an explicit host; **never** `0.0.0.0`.
 
@@ -41,9 +43,10 @@ TCC: same Terminal/Cursor needs **Screen Recording** and **Accessibility** ([doc
 | 4 | SCK capture + dirty rects | done |
 | 5 | Live view (`mrdpd-serve`, pacer, cursor) | done; iPad **saw** desktop |
 | 6 | Inject (`DisplayMap` + `CGEventInputSink`) | **partial**; `just live-check` 9/9; iPad not fully scored; smoothness open |
-| 7 | Clipboard | not started |
-| 8 | Resize stream to iPad | **next product work** |
-| 9–12 | Multimon, EGFX, audio, daemon | after M6 interop-green |
+| V0–V5 | Viewports: any display, client-sized, switchable, two screens, H.264, native client | **next** — [milestones](docs/milestones.md) |
+| 7 | Clipboard | after V3 |
+| 8–10 | Resize, multimon, EGFX | folded into V1, V3, V4 |
+| 11–12 | Audio, daemon | after V3 |
 
 ## Docs
 
@@ -52,8 +55,8 @@ TCC: same Terminal/Cursor needs **Screen Recording** and **Accessibility** ([doc
 | [docs/checkpoint.md](docs/checkpoint.md) | Dated pickup snapshot |
 | [docs/spec.md](docs/spec.md) | Requirement IDs |
 | [docs/method.md](docs/method.md) | TDD + ISP |
-| [docs/architecture.md](docs/architecture.md) | Swift + IronRDP behind C ABI |
-| [docs/milestones.md](docs/milestones.md) | M0–M12; M6 = daily-usable from iPad |
+| [docs/architecture.md](docs/architecture.md) | Viewports: Swift host, IronRDP engine behind C ABI, encode scheduler |
+| [docs/milestones.md](docs/milestones.md) | M0–M12 and the viewport track V0–V5 |
 | [docs/traceability.md](docs/traceability.md) | ID → test → status |
 | [docs/live-check.md](docs/live-check.md) | `just live-check`: automated live input + perf loop |
 | [AGENTS.md](AGENTS.md) | Rules for every session |
