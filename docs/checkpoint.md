@@ -68,6 +68,7 @@ iPad: Windows App → PC `100.x.x.x:3390` (or current `tailscale ip -4`), user `
 - Swift 6: no `NSLock` from async; SCK state is a serial `DispatchQueue`.
 - `swift run mrdpd-serve -- host port` — `--` must be stripped (`ServeArgs`).
 - Capture is **one display**: the main display by default, or `--display A|B|C` (letters left to right, listed at startup; T1-MON-02). Several Mac displays at once is M9 (T2-MON-05).
+- `NSScreen.screensHaveSeparateSpaces` reads `false` in a CLI until `NSApplication.shared` exists; `mrdpd-serve` creates it first. Ground truth: `defaults read com.apple.spaces spans-displays` (`0` = separate Spaces on).
 - Changing iPad resolution must **reconfigure SCK / RDP framebuffer** (M8), not `CGDisplaySetDisplayMode`, unless we write an ADR.
 
 ## Next (priority)
