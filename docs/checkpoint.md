@@ -44,7 +44,10 @@ just serve host=<tailscale-ip>     # iPad; never 0.0.0.0
 just serve-pattern                 # 1080p quadrants (M2)
 just test-freerdp                  # ignored sdl-freerdp GDI
 just test-inject                   # FastPath mouse vs a running serve
+just live-check                    # probe + serve + headless client: input + T1-PERF-02/03/04 (docs/live-check.md)
 ```
+
+CI (`.github/workflows/test.yml`, 2026-10-04) runs `just test` on `macos-15` for every PR and push to main.
 
 If `just` is missing from PATH, use the recipes in `justfile` via `cargo` / `swift` directly.
 
@@ -71,7 +74,7 @@ iPad: Windows App → PC `100.x.x.x:3390` (or current `tailscale ip -4`), user `
 
 ## Next (priority)
 
-1. Confirm remaining M6 iPad input (click, drag, scroll, Cmd) even if laggy — then decide if M6 is “daily usable” enough to call the gate.
+1. Confirm remaining M6 iPad input (click, drag, scroll, Cmd) even if laggy — then decide if M6 is “daily usable” enough to call the gate. `just live-check` (2026-10-04) already passes these on the server side; only Windows App's side is unscored.
 2. **M8** `T1-MON-01`: RDPEDISP + SCK reconfigure to iPad size. Expected to help fit **and** smoothness (fewer RemoteFX pixels). Does not retune the Mac panel.
 3. Smoothness after that: LAN vs Tailscale notes; **M10** H.264/EGFX is T2 and waits on the M6 gate unless we explicitly unblock it.
 4. M7 clipboard only after rolling-wave allows it (T1, but new protocol — first failing test creates `ClipboardBridge`).

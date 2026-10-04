@@ -23,6 +23,8 @@ let package = Package(
             name: "mrdpd-serve",
             dependencies: ["EngineKit", "FrameKit", "InputKit"]
         ),
+        // Lab oracle for `just live-check`; not shipped.
+        .executableTarget(name: "mrdpd-probe"),
         .testTarget(name: "FrameKitTests", dependencies: ["FrameKit"]),
         .testTarget(name: "InputKitTests", dependencies: ["InputKit"]),
         .testTarget(name: "EngineKitTests", dependencies: ["EngineKit", "FrameKit", "InputKit"]),

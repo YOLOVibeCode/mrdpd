@@ -34,8 +34,8 @@ Legend for **Boundary**: B1 wire, B2 ABI, B3 FrameSource, B4 InputSink, B5 clipb
 | T2-MON-04 | APP | M9 flag + fallback doc | local | — | M9 | untested |
 | T1-IN-01 | B2/B4 | B2: `engine/abi-tests/contract.c` (`mrdpd_stub_script_mouse`, `mrdpd_stub_script_key`); B4: `Tests/InputKitTests/*`; composition: `Tests/EngineKitTests/EngineKitTests.swift` (`testScriptedKeySequenceHopsToRecordingInputSink`) | `engine/mrdpd-engine/tests/input_sequence.rs` FastPath A down/up | — | M0/M3 | e2e-green |
 | T1-IN-02 | DATA | `Tests/InputKitTests/UsKeymapTests.swift` (`Sources/InputKit/Keymap/UsKeymap.swift`) | — | — | M3 | contract-green |
-| T1-IN-03 | B4 | `input_sequence.rs` move / left / vertical wheel in virtual-desktop pixels; Retina: `Tests/InputKitTests/DisplayMapTests.swift` + `InjectionPlanTests` | M3 FastPath; M6 `DisplayMap` | C-IPAD deferred | M3 / M6 | e2e-green |
-| T1-IN-04 | B4 | `Tests/InputKitTests/InjectionPlanTests.swift`; `CGEventInputSinkTests.testMouseMovePostsWhenAccessibilityGranted` (`just test-local`); live: `engine/mrdpd-engine/tests/serve_inject.rs` (`just test-inject`) | FastPath mouse → HID on `just serve` | C-IPAD deferred | M6 | e2e-green |
+| T1-IN-03 | B4 | `input_sequence.rs` move / left / vertical wheel in virtual-desktop pixels; Retina: `Tests/InputKitTests/DisplayMapTests.swift` + `InjectionPlanTests`; live: `live_check.rs` click / right click / drag / wheel land on the `DisplayMap` point (`just live-check`) | M3 FastPath; M6 `DisplayMap`; live probe 1600×1200 | C-IPAD deferred | M3 / M6 | e2e-green |
+| T1-IN-04 | B4 | `Tests/InputKitTests/InjectionPlanTests.swift`; `CGEventInputSinkTests.testMouseMovePostsWhenAccessibilityGranted` (`just test-local`); live: `engine/mrdpd-engine/tests/serve_inject.rs` (`just test-inject`); `live_check.rs` typing ("Hello mrdpd 42") + Cmd+A received by `mrdpd-probe` (`just live-check`) | FastPath key + mouse → HID → probe | C-IPAD deferred | M6 | e2e-green |
 | T2-IN-01 | B4 | after M6 | — | — | after M6 | untested |
 | T2-IN-02 | B4 | after M6 | — | — | after M6 | untested |
 | T2-IN-03 | B1 | [spike R2](spikes/2026-08-20-r2-rdpei.md): upstream PR to attach `RdpeiServer`; T1 fallback = mouse wheel. Not OUT | — | C-IPAD | after M6 | untested |
@@ -55,9 +55,9 @@ Legend for **Boundary**: B1 wire, B2 ABI, B3 FrameSource, B4 InputSink, B5 clipb
 | OUT-04 | — | — | — | — | — | accepted-out |
 | OUT-05 | — | — | — | — | — | accepted-out |
 | T1-PERF-01 | B3/B1 | `just bench` → `FramePacerTests.testAllowsAtLeast30FpsWhenClockAdvances` ([bench.md](bench.md)) | LAN fps in M5 interop log | note | M5 | contract-green |
-| T1-PERF-02 | B4/B1 | skipped E2E `CGEventInputSinkTests.testPerf02InputToPhotonIsManualInterop`; measure on `just serve` ([bench.md](bench.md)) | — | note | M6 | untested |
-| T1-PERF-03 | B1 | skipped E2E `EngineKitTests.testPerf03IdleBitrateIsManualInterop`; measure on `just serve` ([bench.md](bench.md)) | — | note | M5 | untested |
-| T1-PERF-04 | APP | skipped E2E `EngineKitTests.testPerf04IdleCpuIsManualInterop`; measure on `just serve` ([bench.md](bench.md)) | — | note | M5 | untested |
+| T1-PERF-02 | B4/B1 | `live_check.rs` `t1_perf_02_input_to_photon` (`just live-check`): key-down → probe patch on the client, median < 80 ms ([bench.md](bench.md)) | loopback 2026-10-04: median 35.9 ms, max 51 ms | LAN note | M6 | e2e-green |
+| T1-PERF-03 | B1 | `live_check.rs` `t1_perf_03_idle_bitrate` (`just live-check`): bytes received over 5 s idle < 50 kbit/s ([bench.md](bench.md)) | loopback 2026-10-04: 0.0 kbit/s | note | M5 | e2e-green |
+| T1-PERF-04 | APP | `live_check.rs` `t1_perf_04_idle_cpu` (`just live-check`): `mrdpd-serve` CPU over 5 s idle < 40 % of one core ([bench.md](bench.md)) | 2026-10-04: 0.2–0.4 % at 1600×1200 | note | M5 | e2e-green |
 | T2-PERF-01 | B1 | M10 A/B | — | WAN note | M10 | untested |
 | T2-PERF-02 | B1 | M9 | — | C-DESK | M9 | untested |
 | T1-OPS-01 | APP | M12 | clean VM | — | M12 | untested |

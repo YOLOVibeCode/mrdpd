@@ -89,6 +89,34 @@ impl ActiveClient {
         }
         Ok(())
     }
+
+    /// Socket read timeout for `pump_once` (the handshake uses 1.5 s).
+    #[allow(dead_code)]
+    pub fn set_read_timeout(&mut self, timeout: Duration) -> anyhow::Result<()> {
+        self.framed.get_inner_mut().0.sock.set_read_timeout(Some(timeout))?;
+        Ok(())
+    }
+
+    /// Read and apply at most one PDU. Returns its size in bytes (0 on read timeout).
+    #[allow(dead_code)]
+    pub fn pump_once(&mut self) -> anyhow::Result<usize> {
+        let (action, payload) = match self.framed.read_pdu() {
+            Ok(pdu) => pdu,
+            Err(e) if matches!(e.kind(), std::io::ErrorKind::WouldBlock | std::io::ErrorKind::TimedOut) => {
+                return Ok(0)
+            }
+            Err(e) => return Err(anyhow::Error::new(e).context("read frame")),
+        };
+        let outputs = self.active_stage.process(&mut self.image, action, &payload)?;
+        for out in outputs {
+            match out {
+                ActiveStageOutput::ResponseFrame(frame) => self.framed.write_all(&frame)?,
+                ActiveStageOutput::Terminate(_) => anyhow::bail!("session terminated"),
+                _ => {}
+            }
+        }
+        Ok(payload.len())
+    }
 }
 
 /// Connect, wait until `ready` (or `wait`), return the live session (T1-IN-01 FastPath).
