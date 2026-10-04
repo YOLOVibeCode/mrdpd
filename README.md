@@ -10,9 +10,11 @@ M0–M5 are in tree. **M6 injects HID** (`CGEventInputSink`) but the **iPad surv
 
 Last iPad session (Tailscale `100.x:3390`, 3360×1890 RemoteFX): desktop **rendered**, **some typing worked**, motion was **not smooth**. Click / drag / scroll / Cmd were not fully scored. Session size is the **first `SCDisplay`**, not the iPad.
 
+**`just live-check`** (2026-10-04) proves the server side with no human: click, right click, drag, wheel, typing, and Cmd+A reach the Mac at the mapped point, and key-to-photon is ~36 ms on loopback. Full-display repaints are ~110 ms, which is the smoothness problem. See [docs/live-check.md](docs/live-check.md).
+
 **Do next**
 
-1. Re-run iPad: confirm click, drag, scroll, Cmd even if laggy. Log in [docs/tasks/m6.md](docs/tasks/m6.md).
+1. Re-run iPad: confirm click, drag, scroll, Cmd on Windows App (live-check already proves the server side). Log in [docs/tasks/m6.md](docs/tasks/m6.md).
 2. **M8** (`T1-MON-01`): RDPEDISP + SCK reconfigure to iPad size. Helps fit and smoothness. Does **not** change the Mac’s hardware resolution (that would need an ADR).
 3. Do **not** start T2 (multimon, EGFX/H.264, audio, file clipboard) until M6 is honestly interop-green.
 
@@ -23,6 +25,7 @@ just test                          # TCC-free
 just test-local                    # Screen Recording + Accessibility
 just serve                         # 127.0.0.1:3390
 just serve host=<tailscale-ip>     # iPad
+just live-check                    # live loop: probe + serve + headless client (TCC; takes the screen ~30 s)
 ```
 
 TCC: same Terminal/Cursor needs **Screen Recording** and **Accessibility** ([docs/tcc.md](docs/tcc.md)).
@@ -37,7 +40,7 @@ TCC: same Terminal/Cursor needs **Screen Recording** and **Accessibility** ([doc
 | 3 | Keymap + FastPath → `RecordingInputSink` | done |
 | 4 | SCK capture + dirty rects | done |
 | 5 | Live view (`mrdpd-serve`, pacer, cursor) | done; iPad **saw** desktop |
-| 6 | Inject (`DisplayMap` + `CGEventInputSink`) | **partial**; typing some; smoothness open |
+| 6 | Inject (`DisplayMap` + `CGEventInputSink`) | **partial**; `just live-check` 9/9; iPad not fully scored; smoothness open |
 | 7 | Clipboard | not started |
 | 8 | Resize stream to iPad | **next product work** |
 | 9–12 | Multimon, EGFX, audio, daemon | after M6 interop-green |
@@ -52,6 +55,7 @@ TCC: same Terminal/Cursor needs **Screen Recording** and **Accessibility** ([doc
 | [docs/architecture.md](docs/architecture.md) | Swift + IronRDP behind C ABI |
 | [docs/milestones.md](docs/milestones.md) | M0–M12; M6 = daily-usable from iPad |
 | [docs/traceability.md](docs/traceability.md) | ID → test → status |
+| [docs/live-check.md](docs/live-check.md) | `just live-check`: automated live input + perf loop |
 | [AGENTS.md](AGENTS.md) | Rules for every session |
 
 ## License

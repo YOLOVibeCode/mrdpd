@@ -1,0 +1,31 @@
+name: test
+
+# `just test`: ABI contract (stub + real engine), headless IronRDP E2E, Swift contract
+# suites. TCC-free by design: capture/inject tests skip and `just live-check` never runs
+# here (CI must not grant or simulate TCC; see AGENTS.md).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: engine
+      - uses: taiki-e/install-action@just
+      - run: swift --version
+      - run: just test

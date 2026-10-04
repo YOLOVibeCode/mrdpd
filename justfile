@@ -52,3 +52,14 @@ test-engine: stub-engine
 
 check-secrets:
     bash scripts/check-secrets.sh --all
+
+# Live loop (T1-IN-03/04, T1-PERF-02/03/04): probe window + mrdpd-serve + headless client,
+# asserting on the HID event the Mac got and the pixels the client saw. Release builds so
+# the perf numbers are honest. Needs Screen Recording + Accessibility; takes over the first
+# display for ~1 min (Escape quits the probe). Not part of `just test`. See docs/live-check.md.
+live-check filter="":
+    cargo build --release --manifest-path engine/Cargo.toml -p mrdpd-engine
+    swift build -c release --product mrdpd-serve
+    swift build -c release --product mrdpd-probe
+    MRDP_ENGINE_DYLIB="$PWD/engine/target/release/libmrdpd_engine.dylib" MRDPD_BIN_DIR="$PWD/.build/release" \
+        cargo test --release --manifest-path engine/Cargo.toml -p mrdpd-engine --test live_check -- --ignored --test-threads=1 --nocapture {{filter}}
