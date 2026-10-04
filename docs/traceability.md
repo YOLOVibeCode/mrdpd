@@ -28,7 +28,7 @@ Legend for **Boundary**: B1 wire, B2 ABI, B3 FrameSource, B4 InputSink, B5 clipb
 | T2-GFX-02 | B2 v2 | M10 first AVC test extracts ABI | M10 | C-IPAD WAN | M10 | untested |
 | T2-GFX-03 | B2 | after AVC420 | M10+ | — | M10+ | untested |
 | T1-MON-01 | B2/B3 | M8 resize callback | M8 size | C-IPAD rotate | M8 | untested |
-| T1-MON-02 | APP/B3 | planned: `DisplayCatalog` unit tests, `ServeArgs --display`, `SCKFrameSource` choice under `just test-local` | `mrdpd-serve --display` on a multi-display Mac | C-IPAD | M6 follow-up | untested |
+| T1-MON-02 | APP/B3 | `Tests/FrameKitTests/DisplayCatalogTests.swift`; `Tests/EngineKitTests/ServeArgsTests.swift` + `DisplayListingTests.swift`; `SCKFrameSourceTests` (`testCapturesMainDisplayByDefault`, `testCapturesChosenLetter`, `testUnknownLetterListsAvailable`) under `just test-local` | `engine/mrdpd-engine/tests/serve_inject.rs` `t1_mon_02_fastpath_mouse_lands_on_served_display` (`just test-inject-display`): displays A and B on a 3-display Mac | C-IPAD deferred | M6 follow-up | e2e-green |
 | T2-MON-01 | B1 | M9; [spike R1](spikes/2026-08-20-r1-static-multimon.md): upstream acceptor / patch (GCC `TS_UD_CS_MONITOR` → N monitors). Not OUT | per-monitor golden | C-DESK | M9 | untested |
 | T2-MON-02 | B1 | M9 layout change. 0.13.0 caps RDPEDISP at one monitor; 0.14 `monitor_count()` (#1918) lifts it ([R1 follow-up](spikes/2026-10-03-r1-host-display-picker.md)) | E2E rearrange | C-DESK | M9 | untested |
 | T2-MON-03 | B3 | M9 compositing | goldens | — | M9 | untested |

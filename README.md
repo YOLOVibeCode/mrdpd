@@ -8,7 +8,7 @@ Apache-licensed **RDP server for macOS**. [Windows App](https://apps.apple.com/a
 
 M0–M5 are in tree. **M6 injects HID** (`CGEventInputSink`) but the **iPad survival gate is not `interop-green`**.
 
-Last iPad session (Tailscale `100.x:3390`, 3360×1890 RemoteFX): desktop **rendered**, **some typing worked**, motion was **not smooth**. Click / drag / scroll / Cmd were not fully scored. Session size is the **first `SCDisplay`**, not the iPad.
+Last iPad session (Tailscale `100.x:3390`, 3360×1890 RemoteFX): desktop **rendered**, **some typing worked**, motion was **not smooth**. Click / drag / scroll / Cmd were not fully scored. Session size is the **served Mac display** (main by default; `just serve display=C` picks another), not the iPad.
 
 **Do next**
 
@@ -23,6 +23,7 @@ just test                          # TCC-free
 just test-local                    # Screen Recording + Accessibility
 just serve                         # 127.0.0.1:3390
 just serve host=<tailscale-ip>     # iPad
+just serve display=C               # another Mac display (letters listed at startup)
 ```
 
 TCC: same Terminal/Cursor needs **Screen Recording** and **Accessibility** ([docs/tcc.md](docs/tcc.md)).

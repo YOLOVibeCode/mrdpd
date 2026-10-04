@@ -59,6 +59,7 @@ A milestone is not done when the demo looks good. It is done when this list is t
 - [x] `DisplayMap` Retina/origin; `InjectionPlan`; `CGEventInputSink` (`InputSink.handle` only)
 - [x] `mrdpd-serve` posts HID; Accessibility documented (`docs/tcc.md`); CI never grants
 - [x] iPad Windows App: live desktop visible; some typing (`docs/tasks/m6.md` C-IPAD log). Smoothness + full mouse/Cmd still open
+- [x] `T1-MON-02` follow-up: `mrdpd-serve --display` picks the Mac display (default main); e2e on a 3-display Mac. iPad check rides the M6 re-test
 - [ ] Traceability rows for T1 graphics + T1 input are at least `interop-green` on iPad
 
 ## M12 extra

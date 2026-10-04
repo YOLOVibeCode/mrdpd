@@ -41,9 +41,10 @@ Needs Screen Recording TCC (`docs/tcc.md`).
 ```bash
 just serve
 # iPad / other host: just serve host=<tailscale-ip>
+# another Mac display: just serve display=C   (T1-MON-02; letters listed at startup)
 ```
 
-Same NLA. Expect the Mac console (cursor composited). Keyboard and mouse inject via Accessibility TCC (`CGEventInputSink`).
+Same NLA. Expect the Mac console (cursor composited). Keyboard and mouse inject via Accessibility TCC (`CGEventInputSink`). One Mac display per session: the main display unless `display=` picks another.
 
 ## Per-milestone manual gates
 

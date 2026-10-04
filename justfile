@@ -17,8 +17,9 @@ serve-pattern host="127.0.0.1" port="3390":
     cargo run --manifest-path engine/Cargo.toml -p mrdpd-engine --bin mrdpd-pattern -- {{host}} {{port}}
 
 # Lab: live desktop + injected input (M6). Needs Screen Recording and Accessibility. Never 0.0.0.0.
-serve host="127.0.0.1" port="3390": engine
-    swift run mrdpd-serve -- {{host}} {{port}}
+# display: A, B, C… left to right (as listed at startup), or main (T1-MON-02).
+serve host="127.0.0.1" port="3390" display="main": engine
+    swift run mrdpd-serve -- {{host}} {{port}} --display {{display}}
 
 # Manual second stack (T1-GFX-01). Requires `brew install freerdp`. Not part of `just test`.
 test-freerdp:
@@ -26,7 +27,11 @@ test-freerdp:
 
 # T1-IN-04: FastPath mouse against a running `just serve`. Not part of `just test`.
 test-inject:
-    cargo test --manifest-path engine/Cargo.toml -p mrdpd-engine --test serve_inject -- --ignored --nocapture
+    cargo test --manifest-path engine/Cargo.toml -p mrdpd-engine --test serve_inject t1_in_04 -- --ignored --nocapture
+
+# T1-MON-02: against `just serve display=X`. frame=x,y,w,h and width/height come from the serve's display listing.
+test-inject-display frame width height port="3390":
+    MRDP_SERVE_PORT={{port}} MRDP_SERVE_WIDTH={{width}} MRDP_SERVE_HEIGHT={{height}} MRDP_SERVE_FRAME="{{frame}}" cargo test --manifest-path engine/Cargo.toml -p mrdpd-engine --test serve_inject t1_mon_02 -- --ignored --nocapture
 
 test-swift: stub-engine
     swift test
