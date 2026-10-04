@@ -14,6 +14,10 @@ public final class SCKFrameSource: FrameSource, @unchecked Sendable {
     public let pixelWidth: UInt32
     public let pixelHeight: UInt32
     public let pointFrame: CGRect
+    /// Every Mac display at capture start (T1-MON-02).
+    public let catalog: DisplayCatalog
+    /// The display this source captures (T1-MON-02).
+    public let served: DisplayCatalog.Entry
     private let state = DispatchQueue(label: "mrdpd.sck.state")
     private let sampleQueue = DispatchQueue(label: "mrdpd.sck.sample")
     private let output = Output()
@@ -26,9 +30,26 @@ public final class SCKFrameSource: FrameSource, @unchecked Sendable {
             throw SCKFrameSourceError.denied
         }
         let content = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: true)
-        guard let display = content.displays.first else {
+        let catalog = DisplayCatalog(
+            displays: content.displays.map { (displayID: $0.displayID, frame: $0.frame) },
+            mainDisplayID: CGMainDisplayID()
+        )
+        guard !catalog.entries.isEmpty else {
             throw SCKFrameSourceError.noDisplay
         }
+        guard let served = catalog.entry(for: settings.display),
+              let display = content.displays.first(where: { $0.displayID == served.displayID })
+        else {
+            let asked: String
+            if case let .letter(letter) = settings.display {
+                asked = letter
+            } else {
+                asked = "main"
+            }
+            throw SCKFrameSourceError.unknownDisplay(asked, available: catalog.entries.map(\.letter))
+        }
+        self.catalog = catalog
+        self.served = served
         self.showsCursor = settings.showsCursor
         self.pixelWidth = UInt32(display.width)
         self.pixelHeight = UInt32(display.height)
@@ -125,6 +146,8 @@ public enum SCKFrameSourceError: Error {
     case noDisplay
     case denied
     case timeout
+    /// T1-MON-02: no display has that letter; `available` lists the letters that exist.
+    case unknownDisplay(String, available: [String])
 }
 
 private final class Output: NSObject, SCStreamOutput {

@@ -7,4 +7,8 @@ final class SCKSettingsTests: XCTestCase {
     func testDefaultCompositesCursor() {
         XCTAssertTrue(SCKSettings().showsCursor, "T1-GFX-05: showsCursor default")
     }
+
+    func testDefaultCapturesMainDisplay() {
+        XCTAssertEqual(SCKSettings().display, .main, "T1-MON-02: default display")
+    }
 }

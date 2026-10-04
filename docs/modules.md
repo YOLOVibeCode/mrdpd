@@ -23,9 +23,11 @@ Nothing here is a “layer.” Each row is a testable element. Do not implement 
 | `mrdpd-pattern` lab bin — M2 | engine + 1080p fixture | T1-GFX-01, T1-SEC-04 |
 | `UsKeymap` — M3 | InputEvent | T1-IN-02 |
 | DirtyRects + CaptureFrame | Frame | T1-GFX-01, T1-GFX-04 |
-| SCKFrameSource | FrameSource | T1-GFX-01, T1-GFX-04 dirty list |
+| `DisplayCatalog` + `DisplayChoice` — M6 follow-up | — (value types) | T1-MON-02 |
+| SCKFrameSource | FrameSource, DisplayCatalog | T1-GFX-01, T1-GFX-04 dirty list, T1-MON-02 |
 | FramePacer | — | T1-GFX-04 cap 60 |
-| SCKSettings + cursor | SCKFrameSource | T1-GFX-05 |
+| SCKSettings + cursor + display choice | SCKFrameSource | T1-GFX-05, T1-MON-02 |
+| `ServeArgs --display` + `DisplayListing` | DisplayCatalog | T1-MON-02 |
 | FramePump + `mrdpd-serve` | FrameSource, EngineKit, SCK | T1-GFX-01 live, T1-SEC-04 |
 | DisplayMap + InjectionPlan | InputEvent | T1-IN-03, T1-IN-04 |
 | CGEventInputSink | InputSink, keymap, DisplayMap | T1-IN-04 |

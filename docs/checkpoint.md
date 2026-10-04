@@ -6,7 +6,7 @@ Read this first in a new session, then [AGENTS.md](../AGENTS.md), [method.md](me
 
 ## Where we are
 
-The Mac can serve the **logged-in console** over RDP (RemoteFX, ABI v1). Windows App on iPad **saw the desktop and could type some keys**. It was **not smooth**. Session size is locked to the first `SCDisplay` (lab: **3360×1890**). Clicks/Cmd/scroll were not fully scored. Changing iPad resolution does **not** yet resize the stream (M8) and must **not** change the Mac’s hardware display mode without an ADR.
+The Mac can serve the **logged-in console** over RDP (RemoteFX, ABI v1). Windows App on iPad **saw the desktop and could type some keys**. It was **not smooth**. Session size is locked to the served `SCDisplay` (lab then: **3360×1890**; since 2026-10-04 the main display by default, `--display` picks another, T1-MON-02). Clicks/Cmd/scroll were not fully scored. Changing iPad resolution does **not** yet resize the stream (M8) and must **not** change the Mac’s hardware display mode without an ADR.
 
 | M | Name | Status |
 | --- | --- | --- |
@@ -39,8 +39,9 @@ TCC: Screen Recording **and** Accessibility on the **same** Terminal/Cursor that
 just test                          # ABI + engine E2E + Swift; no TCC
 just test-local                    # SCK + CGEvent HID mouse
 just bench                         # T1-PERF-01 pacer only
-just serve                         # 127.0.0.1:3390
+just serve                         # 127.0.0.1:3390, main display
 just serve host=<tailscale-ip>     # iPad; never 0.0.0.0
+just serve display=C               # another Mac display (letters listed at startup)
 just serve-pattern                 # 1080p quadrants (M2)
 just test-freerdp                  # ignored sdl-freerdp GDI
 just test-inject                   # FastPath mouse vs a running serve
@@ -66,7 +67,7 @@ iPad: Windows App → PC `100.x.x.x:3390` (or current `tailscale ip -4`), user `
 - Stub cdylib may omit new `#[no_mangle]` until `cargo clean -p mrdpd-stub-engine`.
 - Swift 6: no `NSLock` from async; SCK state is a serial `DispatchQueue`.
 - `swift run mrdpd-serve -- host port` — `--` must be stripped (`ServeArgs`).
-- Capture is **first display only**. Multi-monitor Mac: iPad may not see the display you care about until M9.
+- Capture is **one display**: the main display by default, or `--display A|B|C` (letters left to right, listed at startup; T1-MON-02). Several Mac displays at once is M9 (T2-MON-05).
 - Changing iPad resolution must **reconfigure SCK / RDP framebuffer** (M8), not `CGDisplaySetDisplayMode`, unless we write an ADR.
 
 ## Next (priority)
